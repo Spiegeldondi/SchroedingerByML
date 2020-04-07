@@ -9,7 +9,8 @@
 
 import csv
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 def subexp(expon):
     return np.power(abs(np.log(np.random.uniform())),expon)
@@ -68,16 +69,34 @@ sess = tf.Session()
 sess.run(init)
 for i in range(npots):
     if i%10 == 0:
-        print str((100.*i)/npots) + '% complete'
+        print (str((100.*i)/npots) + '% complete')
     for j in range(3):
         vofx = generatepot(j,(1.*i)/npots)
         energy = tf.reduce_mean(tf.subtract(tf.multiply(tf.square(psi),tf.add(vofx,1.*bins*bins)),
                                             tf.multiply(tf.multiply(tf.add(psil,psir),psi),0.5*bins*bins)))
         training = optimzi.minimize(energy)
         sess.run(reinit)
+        
+        if i%validnth == 0:
+            e = np.random.randint(42,54)
+            f = np.random.randint(74,86)
+            int3 = [0]*len(vofx[e:f])
+            vofx[e:f] = int3
+            
+        else:
+            a = np.random.randint(0,11)
+            b = np.random.randint(31,42)
+            c = np.random.randint(86,97)
+            d = np.random.randint(117,128)
+            int1 = [0]*len(vofx[a:b])
+            int2 = [0]*len(vofx[c:d])
+            vofx[a:b] = int1
+            vofx[c:d] = int2
+        
         for t in range(20000):
             sess.run(training)
             sess.run(renorm)
+            
         if i%validnth == 0:
             validpots.append(vofx)
             validfuncs.append(sess.run(psi).tolist())
@@ -97,4 +116,4 @@ with open('test_out'+str(seed)+'.csv', 'w') as f:
 with open('valid_out'+str(seed)+'.csv', 'w') as f:
     fileout = csv.writer(f)
     fileout.writerows(validfuncs)
-print 'Output complete'
+print ('Output complete')

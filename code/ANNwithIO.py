@@ -16,19 +16,19 @@ validy = []
 # %% This is not a ... pythonic [barf]... way of reading data, but python is stupid about pointers, so deal with it
 #for i in range(seedmax):
 for i in range(seedmax):
-    with open('/home/domi/schroedinger/test_pots/test_pots'+str(i)+'.csv', 'r') as csvfile:
+    with open('/home/domi/Dokumente/schroedinger/potentials/test_pots/test_pots'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             trainx.append([float(num) for num in row])
-    with open('/home/domi/schroedinger/test_out/test_out'+str(i)+'.csv', 'r') as csvfile:
+    with open('/home/domi/Dokumente/schroedinger/potentials/test_out/test_out'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             trainy.append([float(num) for num in row])
-    with open('/home/domi/schroedinger/valid_pots/valid_pots'+str(i)+'.csv', 'r') as csvfile:
+    with open('/home/domi/Dokumente/schroedinger/potentials/valid_pots/valid_pots'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             validx.append([float(num) for num in row])
-    with open('/home/domi/schroedinger/valid_out/valid_out'+str(i)+'.csv', 'r') as csvfile:
+    with open('/home/domi/Dokumente/schroedinger/potentials/valid_out/valid_out'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             validy.append([float(num) for num in row])
@@ -68,7 +68,6 @@ optimizer = tf.train.GradientDescentOptimizer(learnrate)
 trainstep = optimizer.minimize(costfunc)
 
 # %% 
-
 train_loss_list = []
 valid_loss_list = []
 
@@ -94,7 +93,6 @@ for step in range(100000):
     sess.run(trainstep, feed_dict={X: trainx, Y: trainy})
     
 # %%
-    
 import csv
 
 # %%
