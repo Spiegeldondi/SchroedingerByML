@@ -12,6 +12,7 @@ import numpy as np
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
+#%%
 def subexp(expon):
     return np.power(abs(np.log(np.random.uniform())),expon)
 
@@ -65,6 +66,7 @@ validpots = []
 wavefuncs = []
 validfuncs = []
 
+#%%
 sess = tf.Session()
 sess.run(init)
 for i in range(npots):
@@ -84,10 +86,10 @@ for i in range(npots):
             vofx[e:f] = int3
             
         else:
-            a = np.random.randint(0,11)
+            a = 0
             b = np.random.randint(31,42)
             c = np.random.randint(86,97)
-            d = np.random.randint(117,128)
+            d = 128
             int1 = [0]*len(vofx[a:b])
             int2 = [0]*len(vofx[c:d])
             vofx[a:b] = int1
@@ -104,6 +106,7 @@ for i in range(npots):
             potentials.append(vofx)
             wavefuncs.append(sess.run(psi).tolist())
 
+#%%
 with open('test_pots'+str(seed)+'.csv', 'w') as f:
     fileout = csv.writer(f)
     fileout.writerows(potentials)

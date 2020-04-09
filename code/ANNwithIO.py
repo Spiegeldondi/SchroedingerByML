@@ -14,21 +14,20 @@ validx = []
 validy = []
 
 # %% This is not a ... pythonic [barf]... way of reading data, but python is stupid about pointers, so deal with it
-#for i in range(seedmax):
-for i in range(seedmax):
-    with open('/home/domi/Dokumente/schroedinger/potentials/test_pots/test_pots'+str(i)+'.csv', 'r') as csvfile:
+for i in range(1): #statt 1 gehört hier seedmax
+    with open('/home/domi/Dokumente/SchroedingerByML/potentials/test_pots'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             trainx.append([float(num) for num in row])
-    with open('/home/domi/Dokumente/schroedinger/potentials/test_out/test_out'+str(i)+'.csv', 'r') as csvfile:
+    with open('/home/domi/Dokumente/SchroedingerByML/potentials/test_out'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             trainy.append([float(num) for num in row])
-    with open('/home/domi/Dokumente/schroedinger/potentials/valid_pots/valid_pots'+str(i)+'.csv', 'r') as csvfile:
+    with open('/home/domi/Dokumente/SchroedingerByML/potentials/valid_pots'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             validx.append([float(num) for num in row])
-    with open('/home/domi/Dokumente/schroedinger/potentials/valid_out/valid_out'+str(i)+'.csv', 'r') as csvfile:
+    with open('/home/domi/Dokumente/SchroedingerByML/potentials/valid_out'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             validy.append([float(num) for num in row])
