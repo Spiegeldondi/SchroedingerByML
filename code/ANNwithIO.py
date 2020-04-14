@@ -14,21 +14,24 @@ trainy = []
 validx = []
 validy = []
 
+#%%
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/super_rand_win_pots/'
+
 # %% This is not a ... pythonic [barf]... way of reading data, but python is stupid about pointers, so deal with it
-for i in range(6): #statt 1 gehört hier seedmax
-    with open('/home/domi/Dokumente/SchroedingerByML/potentials/rand_win_pots/test_pots/test_pots'+str(i)+'.csv', 'r') as csvfile:
+for i in range(5): #statt 1 gehört hier seedmax
+    with open(path+'test_pots'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             trainx.append([float(num) for num in row])
-    with open('/home/domi/Dokumente/SchroedingerByML/potentials/rand_win_pots/test_out/test_out'+str(i)+'.csv', 'r') as csvfile:
+    with open(path+'test_out'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             trainy.append([float(num) for num in row])
-    with open('/home/domi/Dokumente/SchroedingerByML/potentials/rand_win_pots/valid_pots/valid_pots'+str(i)+'.csv', 'r') as csvfile:
+    with open(path+'valid_pots'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             validx.append([float(num) for num in row])
-    with open('/home/domi/Dokumente/SchroedingerByML/potentials/rand_win_pots/valid_out/valid_out'+str(i)+'.csv', 'r') as csvfile:
+    with open(path+'valid_out'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             validy.append([float(num) for num in row])
@@ -77,7 +80,6 @@ sess = tf.Session()
 sess.run(init)
 
 # %%
-
 for step in range(100000):
     if step % 150 == 0:
         if ic == gslist[gs]:
@@ -87,10 +89,12 @@ for step in range(100000):
         else:
             ic = ic + 1
     if step %100 == 0:
-        train_loss_list.append(sess.run(costfunc,feed_dict={X: trainx, Y: trainy}))
-        valid_loss_list.append(sess.run(costfunc,feed_dict={X: validx, Y: validy}))
         print (step, 'Train loss: ',sess.run(costfunc,feed_dict={X: trainx, Y: trainy}), 'Valid loss: ',sess.run(costfunc,feed_dict={X: validx, Y: validy}))
     sess.run(trainstep, feed_dict={X: trainx, Y: trainy})
+    
+    if step %10 == 0:
+        train_loss_list.append(sess.run(costfunc,feed_dict={X: trainx, Y: trainy}))
+        valid_loss_list.append(sess.run(costfunc,feed_dict={X: validx, Y: validy}))
     
 # %%
 import csv

@@ -14,6 +14,9 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 #%%
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/super_rand_win_pots/'
+
+#%%
 def subexp(expon):
     return np.power(abs(np.log(np.random.uniform())),expon)
 
@@ -43,8 +46,7 @@ def generatepot(style,param): #0=step,1=linear,2=fourier; 0-1 "jaggedness" scale
         poten = np.maximum(np.add(np.add(np.matmul(sincoef,sinval),np.matmul(coscoef,cosval)),zercoef),0).tolist()
     return poten
 
-#seed = 1
-for seed in range(6,8): 
+for seed in range(0,5): 
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
     npots = 200 #ends up being 3*this*(validnth-1)/validnth
@@ -82,20 +84,16 @@ for seed in range(6,8):
             sess.run(reinit)
             
             if i%validnth == 0:
-                # e = np.random.randint(42,54)
-                # f = np.random.randint(74,86)
-                int3 = [0]*len(vofx[32:96])
-                vofx[32:96] = int3
+                a = np.random.randint(16,56)
+                b = np.random.randint(72,112)
+                int3 = [0]*len(vofx[a:b])
+                vofx[a:b] = int3
                 
             else:
-                # a = 0
-                # b = np.random.randint(31,42)
-                # c = np.random.randint(86,97)
-                # d = 128
-                int1 = [0]*len(vofx[0:32])
-                int2 = [0]*len(vofx[96:128])
-                vofx[0:32] = int1
-                vofx[96:128] = int2
+                int1 = [0]*len(vofx[0:a])
+                int2 = [0]*len(vofx[b:128])
+                vofx[0:a] = int1
+                vofx[b:128] = int2
             
             for t in range(20000):
                 sess.run(training)
@@ -109,16 +107,16 @@ for seed in range(6,8):
                 wavefuncs.append(sess.run(psi).tolist())
     
     
-    with open('test_pots'+str(seed)+'.csv', 'w') as f:
+    with open(path+'test_pots'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(potentials)
-    with open('valid_pots'+str(seed)+'.csv', 'w') as f:
+    with open(path+'valid_pots'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(validpots)
-    with open('test_out'+str(seed)+'.csv', 'w') as f:
+    with open(path+'test_out'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(wavefuncs)
-    with open('valid_out'+str(seed)+'.csv', 'w') as f:
+    with open(path+'valid_out'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(validfuncs)
     print ('Output complete')
