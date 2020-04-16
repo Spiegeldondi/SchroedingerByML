@@ -14,7 +14,7 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/super_rand_win_pots/'
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/B3_super_rand_win_pots/'
 
 #%%
 def subexp(expon):

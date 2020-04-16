@@ -108,12 +108,11 @@ plt.plot(valid_loss_list.index(min(valid_loss_list))*10, min(valid_loss_list), '
 plt.legend()
 
 #%%
-
-with open('/home/domi/schroedinger/loss_data/train_loss_list.csv', 'w') as csvfile:
+with open('/home/domi/Dokumente/SchroedingerByML/lossData/B2/train_loss_list.csv', 'w') as csvfile:
     wr = csv.writer(csvfile)
     wr.writerow(train_loss_list)
     
-with open('/home/domi/schroedinger/loss_data/valid_loss_list.csv', 'w') as csvfile:
+with open('/home/domi/Dokumente/SchroedingerByML/lossData/B2/valid_loss_list.csv', 'w') as csvfile:
     wr = csv.writer(csvfile)
     wr.writerow(valid_loss_list)
     
