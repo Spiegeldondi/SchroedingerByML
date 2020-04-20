@@ -15,7 +15,7 @@ validx = []
 validy = []
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/B3_super_rand_win_pots/'
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/C_windowPotentialsDrive/'
 
 # %% This is not a ... pythonic [barf]... way of reading data, but python is stupid about pointers, so deal with it
 for i in range(seedmax):
@@ -92,24 +92,20 @@ for step in range(10000):
         print (step, 'Train loss: ',sess.run(costfunc,feed_dict={X: trainx, Y: trainy}), 'Valid loss: ',sess.run(costfunc,feed_dict={X: validx, Y: validy}))
     sess.run(trainstep, feed_dict={X: trainx, Y: trainy})
     
-    if step %10 == 0:
-        train_loss_list.append(sess.run(costfunc,feed_dict={X: trainx, Y: trainy}))
-        valid_loss_list.append(sess.run(costfunc,feed_dict={X: validx, Y: validy}))
+    train_loss_list.append(sess.run(costfunc,feed_dict={X: trainx, Y: trainy}))
+    valid_loss_list.append(sess.run(costfunc,feed_dict={X: validx, Y: validy}))
     
-# %%
-import csv
-
 # %%
 
 ###############
 # EXPORT LIST #
 ###############
 
-with open('/home/domi/Dokumente/SchroedingerByML/lossData/B3/train_loss_list.csv', 'w') as csvfile:
+with open('/home/domi/Dokumente/SchroedingerByML/lossData/C/train_loss_list.csv', 'w') as csvfile:
     wr = csv.writer(csvfile)
     wr.writerow(train_loss_list)
     
-with open('/home/domi/Dokumente/SchroedingerByML/lossData/B3/valid_loss_list.csv', 'w') as csvfile:
+with open('/home/domi/Dokumente/SchroedingerByML/lossData/C/valid_loss_list.csv', 'w') as csvfile:
     wr = csv.writer(csvfile)
     wr.writerow(valid_loss_list)
     
@@ -119,14 +115,14 @@ with open('/home/domi/Dokumente/SchroedingerByML/lossData/B3/valid_loss_list.csv
 # IMPORT LIST #
 ###############
 
-with open('/home/domi/Dokumente/SchroedingerByML/lossData/B2/train_loss_list.csv') as csvfile:
+with open('/home/domi/Dokumente/SchroedingerByML/lossData/C/train_loss_list.csv') as csvfile:
     rd = csv.reader(csvfile)
     train_loss = list(rd)[0]
     
-with open('/home/domi/Dokumente/SchroedingerByML/lossData/B2/valid_loss_list.csv') as csvfile:
+with open('/home/domi/Dokumente/SchroedingerByML/lossData/C/valid_loss_list.csv') as csvfile:
     rd = csv.reader(csvfile)
     valid_loss = list(rd)[0]
-    
+        
 train_loss_list = [float(x) for x in train_loss]
 valid_loss_list = [float(x) for x in valid_loss]
 
@@ -135,8 +131,8 @@ plt.grid(1)
 plt.title('training and validation error')
 plt.xlabel('epoch')
 plt.ylabel('loss')
-plt.plot([x*10 for x in range(len(train_loss_list))], train_loss_list, 'b', label='train loss')
-plt.plot([x*10 for x in range(len(valid_loss_list))], valid_loss_list, 'g', label='validation loss')
+plt.plot([x*10 for x in range(len(train_loss_list))], train_loss_list, 'g', label='train loss')
+plt.plot([x*10 for x in range(len(valid_loss_list))], valid_loss_list, 'b', label='validation loss')
 plt.plot(valid_loss_list.index(min(valid_loss_list))*10, min(valid_loss_list), 'ro', label='validation loss minimum')
 plt.legend()
 
