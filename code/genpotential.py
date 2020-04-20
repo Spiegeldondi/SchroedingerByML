@@ -46,6 +46,7 @@ def generatepot(style,param): #0=step,1=linear,2=fourier; 0-1 "jaggedness" scale
         poten = np.maximum(np.add(np.add(np.matmul(sincoef,sinval),np.matmul(coscoef,cosval)),zercoef),0).tolist()
     return poten
 
+#%%
 for seed in range(0,5): 
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
@@ -69,8 +70,7 @@ for seed in range(0,5):
     validpots = []
     wavefuncs = []
     validfuncs = []
-    
-    
+        
     sess = tf.Session()
     sess.run(init)
     for i in range(npots):
