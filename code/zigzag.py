@@ -67,6 +67,93 @@ sess.run(init)
 
 #%%
 vofx = generatepot(0,1)
+
+#%%
+vofx_smooth_np = (np.array(savgol_filter(vofx, 25, 3))).astype('float32')
+# vofx_smooth_np = (np.array(vofx)).astype('float32')
+
+vofx_smooth = []
+
+for i in vofx_smooth_np:
+    vofx_smooth.append(i)
+    
+#%%
+minmaxlist_smooth = []
+indexlist_smooth = []
+
+for i in [0,20,40,60,80,100,120]:
+    minmaxlist_smooth.append([min(vofx_smooth[i:i+20]), 
+                              vofx_smooth.index(min(vofx_smooth[i:i+20]))])
+    minmaxlist_smooth.append([max(vofx_smooth[i:i+20]), 
+                              vofx_smooth.index(max(vofx_smooth[i:i+20]))])
+    
+from operator import itemgetter
+minmaxlist_smooth = sorted(minmaxlist_smooth, key=itemgetter(1)) 
+
+domain = [0]
+potential = [vofx_smooth[0]] # FÜR ANDERE POTS MUSS DAS MIN AUCH NOCH REIN !!!!!
+
+for i in range(len(minmaxlist_smooth)):
+    potential.append((minmaxlist_smooth[i])[0])
+    domain.append((minmaxlist_smooth[i])[1])
+
+plt.xlabel('x') 
+plt.plot(domain, potential,'o')
+plt.plot(vofx_smooth, label='V(x) smooth')
+
+steps = domain[-1] - domain[0]
+
+xvals = np.linspace(domain[0], domain[-1], steps+1)
+yinterp = np.interp(xvals, domain, potential)
+plt.plot(domain, potential, 'o', label='local extrema')
+plt.plot(xvals, yinterp, label='linear interpolation')
+plt.legend(loc=1)
+#%%
+vofx_zz = []
+
+for i in yinterp:
+    vofx_zz.append(i)
+
+#%%
+'''
+LITTLE BIT FISHY TO FILL UP VOFX_ZZ TO 127
+'''
+# vofx_zz.append(vofx_zz[-1])
+# vofx_zz.append(vofx_zz[-1])
+
+#%%
+energy = tf.reduce_mean(tf.subtract(tf.multiply(tf.square(psi),tf.add(vofx_zz,1.*bins*bins)),
+                                    tf.multiply(tf.multiply(tf.add(psil,psir),psi),0.5*bins*bins)))
+training = optimzi.minimize(energy)
+sess.run(reinit)
+
+#%%
+for t in range(20000):
+    sess.run(training)
+    sess.run(renorm)
+    if t%2000 == 0:
+        print(t/200, "% complete")
+  
+#%%
+potentials.append(vofx_zz)
+wavefuncs.append(sess.run(psi).tolist())
+sess.close()
+
+#%% NORMALIZATION
+vofx_zz_norm = [v / max(vofx_zz) for v in vofx_zz]
+wavefuncs_zz_norm = [psi / max(wavefuncs[0]) for psi in wavefuncs[0]]
+
+#%% PLOT POTENTIAL AND WAVEFUNCTION
+plt.xlabel('x')
+plt.plot(vofx_zz_norm, label = 'V(x)')
+plt.plot(wavefuncs_zz_norm, label = 'Psi(x)')
+plt.legend()
+
+#%%
+sess = tf.Session()
+sess.run(init)
+
+#%%
 energy = tf.reduce_mean(tf.subtract(tf.multiply(tf.square(psi),tf.add(vofx,1.*bins*bins)),
                                     tf.multiply(tf.multiply(tf.add(psil,psir),psi),0.5*bins*bins)))
 training = optimzi.minimize(energy)
@@ -84,9 +171,14 @@ potentials.append(vofx)
 wavefuncs.append(sess.run(psi).tolist())
 sess.close()
 
-#%%
-vofx_smooth = (np.array(savgol_filter(vofx, 25, 3))).astype('float32')
+#%% NORMALIZATION
+vofx_norm = [v / max(vofx) for v in vofx]
+wavefuncs_norm = [psi / max(wavefuncs[1]) for psi in wavefuncs[1]]
 
+#%% PLOT POTENTIAL AND WAVEFUNCTION
+plt.plot(vofx_norm, label='V(x) original')
+plt.plot(wavefuncs_norm, label='Psi(x) original')
+plt.legend()
 #%%
 sess = tf.Session()
 sess.run(init)
@@ -103,115 +195,17 @@ for t in range(20000):
     sess.run(renorm)
     if t%2000 == 0:
         print(t/200, "% complete")
-
+  
 #%%
 potentials.append(vofx_smooth)
 wavefuncs.append(sess.run(psi).tolist())
 sess.close()
 
-#%%
-# NORMALIZATION
-vofx_smooth_norm = [v / max(vofx_smooth) for v in vofx_smooth]
-wavefuncs_smooth_norm = [psi / max(wavefuncs[1]) for psi in wavefuncs[1]]
-
-#%%
-# PLOT POTENTIAL AND WAVEFUNCTION
-plt.xlabel('x')
-plt.plot(vofx_smooth_norm, label='V(x)')
-plt.plot(wavefuncs_smooth_norm, label='Psi(x)')
-plt.legend(loc=1)
-
-
-
 #%% NORMALIZATION
-vofx_norm = [v / max(vofx) for v in vofx]
-wavefuncs_norm = [psi / max(wavefuncs[0]) for psi in wavefuncs[0]]
+vofx_smooth_norm = [v / max(vofx_smooth) for v in vofx_smooth]
+wavefuncs_smooth_norm = [psi / max(wavefuncs[2]) for psi in wavefuncs[2]]
 
 #%% PLOT POTENTIAL AND WAVEFUNCTION
-plt.xlabel('x')
-plt.plot(vofx_norm, label='V(x) original')
-plt.plot(wavefuncs_norm, label='Psi(x) original')
-plt.legend(loc=1)
-
-#%%
-minmaxlist_smooth = []
-indexlist_smooth = []
-
-for i in [0,20,40,60,80,100,120]:
-    minmaxlist_smooth.append([min(vofx_smooth_norm[i:i+20]), 
-                              vofx_smooth_norm.index(min(vofx_smooth_norm[i:i+20]))])
-    minmaxlist_smooth.append([max(vofx_smooth_norm[i:i+20]), 
-                              vofx_smooth_norm.index(max(vofx_smooth_norm[i:i+20]))])
-    
-from operator import itemgetter
-minmaxlist_smooth = sorted(minmaxlist_smooth, key=itemgetter(1)) 
-
-domain = [0]
-potential = [vofx_smooth_norm[0]] # FÜR ANDERE POTS MUSS DAS MIN AUCH NOCH REIN !!!!!
-
-for i in range(len(minmaxlist_smooth)):
-    potential.append((minmaxlist_smooth[i])[0])
-    domain.append((minmaxlist_smooth[i])[1])
-    
-plt.plot(domain, potential,'o')
-plt.plot(vofx_smooth_norm)
-
-steps = domain[-1] - domain[0]
-
-xvals = np.linspace(domain[0], domain[-1], steps+1)
-yinterp = np.interp(xvals, domain, potential)
-plt.plot(domain, potential, 'o')
-plt.plot(xvals, yinterp)
-
-'''
-ASDFFFFFFFFFFf
-ADSFFFFFFFFFFFf
-ASDFFFFFFFf
-'''
-
-#%%
-
-vofx_zigzag = (np.array(yinterp)).astype('float32')
-
-
-#%%
-sess = tf.Session()
-sess.run(init)
-
-#%%
-energy = tf.reduce_mean(tf.subtract(tf.multiply(tf.square(psi),tf.add(vofx_zigzag,1.*bins*bins)),
-                                    tf.multiply(tf.multiply(tf.add(psil,psir),psi),0.5*bins*bins)))
-training = optimzi.minimize(energy)
-sess.run(reinit)
-
-#%%
-for t in range(20000):
-    sess.run(training)
-    sess.run(renorm)
-    if t%2000 == 0:
-        print(t/200, "% complete")
-
-#%%
-potentials.append(vofx_zigzag)
-wavefuncs.append(sess.run(psi).tolist())
-sess.close()
-
-#%%
-# NORMALIZATION
-vofx_zz_norm = [v / max(vofx_zigzag) for v in vofx_zigzag]
-wavefuncs_zz_norm = [psi / max(wavefuncs[2]) for psi in wavefuncs[2]]
-
-#%%
-# PLOT POTENTIAL AND WAVEFUNCTION
-plt.plot(vofx_zz_norm)
-plt.plot(wavefuncs_zz_norm)
-
-#%% ERROR CALCULATION ---> change arguments later
-"""
-error = []
-
-for k in range(127):
-    error.append(abs((vofx_norm[k])**2 - (wavefuncs_norm[k])**2))
-    
-plt.plot(error)
-"""
+plt.plot(vofx_smooth_norm, label='V(x) smooth')
+plt.plot(wavefuncs_smooth_norm, label='Psi(x) smooth')
+plt.legend()
