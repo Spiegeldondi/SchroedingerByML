@@ -14,7 +14,7 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/B3_super_rand_win_pots/'
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/'
 
 #%%
 def subexp(expon):
@@ -47,7 +47,7 @@ def generatepot(style,param): #0=step,1=linear,2=fourier; 0-1 "jaggedness" scale
     return poten
 
 #%%
-for seed in range(0,5): 
+for seed in range(0,10): 
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
     npots = 200 #ends up being 3*this*(validnth-1)/validnth
@@ -83,17 +83,11 @@ for seed in range(0,5):
             training = optimzi.minimize(energy)
             sess.run(reinit)
             
-            if i%validnth == 0:
-                a = np.random.randint(16,56)
-                b = np.random.randint(72,112)
-                int3 = [0]*len(vofx[a:b])
-                vofx[a:b] = int3
-                
-            else:
-                int1 = [0]*len(vofx[0:a])
-                int2 = [0]*len(vofx[b:128])
-                vofx[0:a] = int1
-                vofx[b:128] = int2
+            if i%validnth != 0:
+                a = 43
+                b = 84
+                window = [0]*(b-a)
+                vofx[a:b] = window
             
             for t in range(20000):
                 sess.run(training)

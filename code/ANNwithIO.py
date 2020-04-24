@@ -15,7 +15,7 @@ validx = []
 validy = []
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/C_windowPotentialsDrive/'
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/C2/'
 
 # %% This is not a ... pythonic [barf]... way of reading data, but python is stupid about pointers, so deal with it
 for i in range(seedmax):
