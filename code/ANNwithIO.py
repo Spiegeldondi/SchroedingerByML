@@ -15,7 +15,7 @@ validx = []
 validy = []
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/C2/'
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/B1_fixed_win_pots/'
 
 # %% This is not a ... pythonic [barf]... way of reading data, but python is stupid about pointers, so deal with it
 for i in range(seedmax):
@@ -101,11 +101,11 @@ for step in range(10000):
 # EXPORT LIST #
 ###############
 
-with open('/home/domi/Dokumente/SchroedingerByML/lossData/C/train_loss_list.csv', 'w') as csvfile:
+with open('/home/domi/Dokumente/SchroedingerByML/lossData/train_loss_list.csv', 'w') as csvfile:
     wr = csv.writer(csvfile)
     wr.writerow(train_loss_list)
     
-with open('/home/domi/Dokumente/SchroedingerByML/lossData/C/valid_loss_list.csv', 'w') as csvfile:
+with open('/home/domi/Dokumente/SchroedingerByML/lossData/valid_loss_list.csv', 'w') as csvfile:
     wr = csv.writer(csvfile)
     wr.writerow(valid_loss_list)
     
@@ -126,6 +126,9 @@ with open('/home/domi/Dokumente/SchroedingerByML/lossData/C/valid_loss_list.csv'
 train_loss_list = [float(x) for x in train_loss]
 valid_loss_list = [float(x) for x in valid_loss]
 
+train_loss_list = train_loss_list[0::10]
+valid_loss_list = valid_loss_list[0::10]
+
 # %%
 plt.grid(1)
 plt.title('training and validation error')
@@ -142,7 +145,7 @@ plt.legend()
 # and the neural network predicted ground state
 # should be added to notebook containing schroedinger_nn.py
 import matplotlib.pyplot as mp
-potenid = 1200
+potenid = np.random.randint(0,2400)
 mp.plot([trainx[potenid][i]/max(trainx[potenid]) for i in range(bins - 1)], label='potential')
 mp.plot(sess.run(L3,feed_dict={X: [trainx[potenid]]})[0], label='prediction')
 mp.plot(trainy[potenid], label='target')
