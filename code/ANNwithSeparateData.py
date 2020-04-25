@@ -1,5 +1,6 @@
 import csv
 import numpy as np
+import matplotlib.pyplot as plt
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
@@ -13,19 +14,19 @@ bins = 128
 seedmax = 20
 
 for i in range(seedmax):
-    with open('/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/test_pots/test_pots'+str(i)+'.csv', 'r') as csvfile:
+    with open('/home/domi/Dokumente/SchroedingerByML/potentials/C_windowPotentialsDrive/test_pots/test_pots'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             trainx.append([float(num) for num in row])
-    with open('/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/test_out/test_out'+str(i)+'.csv', 'r') as csvfile:
+    with open('/home/domi/Dokumente/SchroedingerByML/potentials/C_windowPotentialsDrive/test_out/test_out'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             trainy.append([float(num) for num in row])
-    with open('/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/valid_pots/valid_pots'+str(i)+'.csv', 'r') as csvfile:
+    with open('/home/domi/Dokumente/SchroedingerByML/potentials/C_windowPotentialsDrive/valid_pots/valid_pots'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             validx.append([float(num) for num in row])
-    with open('/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/valid_out/valid_out'+str(i)+'.csv', 'r') as csvfile:
+    with open('/home/domi/Dokumente/SchroedingerByML/potentials/C_windowPotentialsDrive/valid_out/valid_out'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
             validy.append([float(num) for num in row])
@@ -91,13 +92,14 @@ for step in range(10000):
         else:
             ic = ic + 1
     if step %100 == 0:
-        train_loss_list.append(sess.run(costfunc,feed_dict={X: trainx_step, Y: trainy_step}))
-        valid_loss_list.append(sess.run(costfunc,feed_dict={X: validx_four, Y: validy_four}))
-        print (step, 'Train loss: ',sess.run(costfunc,feed_dict={X: trainx_step, Y: trainy_step}), 'Valid loss: ',sess.run(costfunc,feed_dict={X: validx_four, Y: validy_four}))
+        print (step, 'Train loss: ',sess.run(costfunc,feed_dict={X: trainx_step, Y: trainy_step}), 'Valid loss: ',sess.run(costfunc,feed_dict={X: validx_step, Y: validy_step}))
     sess.run(trainstep, feed_dict={X: trainx_step, Y: trainy_step})
     
+    train_loss_list.append(sess.run(costfunc,feed_dict={X: trainx_step, Y: trainy_step}))
+    valid_loss_list.append(sess.run(costfunc,feed_dict={X: validx_step, Y: validy_step}))
+    
 #%%
-import matplotlib.pyplot as plt
+
 plt.grid(1)
 plt.title('training and validation error\n(training on step function, validation on fourier series)')
 plt.xlabel('epoch')
@@ -120,9 +122,9 @@ with open('/home/domi/Dokumente/SchroedingerByML/lossData/B2/valid_loss_list.csv
 potenid = 555
 plt.title('prediction vs. ground truth')
 plt.xlabel('r')
-plt.plot([validx_four[potenid][i]/max(validx_four[potenid]) for i in range(bins - 1)], label='potential')
-plt.plot(sess.run(L3,feed_dict={X: [validx_four[potenid]]})[0], label='prediction')
-plt.plot(validy_four[potenid], label='target')
+plt.plot([validx_step[potenid][i]/max(validx_step[potenid]) for i in range(bins - 1)], label='potential')
+plt.plot(sess.run(L3,feed_dict={X: [validx_step[potenid]]})[0], label='prediction')
+plt.plot(validy_step[potenid], label='target')
 plt.legend()
 plt.show()
 

@@ -14,7 +14,7 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/'
+path = '/home/domi/Dokumente/'
 
 #%%
 def subexp(expon):
@@ -47,7 +47,7 @@ def generatepot(style,param): #0=step,1=linear,2=fourier; 0-1 "jaggedness" scale
     return poten
 
 #%%
-for seed in range(0,10): 
+for seed in range(9,10): 
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
     npots = 200 #ends up being 3*this*(validnth-1)/validnth
