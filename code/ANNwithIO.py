@@ -15,7 +15,7 @@ validx = []
 validy = []
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/B1_fixed_win_pots/'
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/C_windowPotentialsFixed/'
 
 # %% This is not a ... pythonic [barf]... way of reading data, but python is stupid about pointers, so deal with it
 for i in range(seedmax):
@@ -81,13 +81,13 @@ sess.run(init)
 
 # %%
 for step in range(10000):
-    if step % 150 == 0:
-        if ic == gslist[gs]:
-            gs = gs + 1
-            ic = 1
-            sess.run(updatelearnrate)
-        else:
-            ic = ic + 1
+    # if step % 150 == 0:
+    #     if ic == gslist[gs]:
+    #         gs = gs + 1
+    #         ic = 1
+    #         sess.run(updatelearnrate)
+    #     else:
+    #         ic = ic + 1
     if step %100 == 0:
         print (step, 'Train loss: ',sess.run(costfunc,feed_dict={X: trainx, Y: trainy}), 'Valid loss: ',sess.run(costfunc,feed_dict={X: validx, Y: validy}))
     sess.run(trainstep, feed_dict={X: trainx, Y: trainy})
@@ -101,11 +101,11 @@ for step in range(10000):
 # EXPORT LIST #
 ###############
 
-with open('/home/domi/Dokumente/SchroedingerByML/lossData/train_loss_list.csv', 'w') as csvfile:
+with open('/home/domi/Dokumente/SchroedingerByML/lossData/C_winPotFix/train_loss_list.csv', 'w') as csvfile:
     wr = csv.writer(csvfile)
     wr.writerow(train_loss_list)
     
-with open('/home/domi/Dokumente/SchroedingerByML/lossData/valid_loss_list.csv', 'w') as csvfile:
+with open('/home/domi/Dokumente/SchroedingerByML/lossData/C_winPotFix/valid_loss_list.csv', 'w') as csvfile:
     wr = csv.writer(csvfile)
     wr.writerow(valid_loss_list)
     
