@@ -15,7 +15,7 @@ validx = []
 validy = []
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/C_windowPotentialsFixed/'
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/B1_fixed_win_pots/'
 
 # %% This is not a ... pythonic [barf]... way of reading data, but python is stupid about pointers, so deal with it
 for i in range(seedmax):
@@ -35,6 +35,24 @@ for i in range(seedmax):
         flurg = csv.reader(csvfile)
         for row in flurg:
             validy.append([float(num) for num in row])
+            
+# %% Normalize Input
+            
+for k in range(len(trainx)):
+    if max(trainx[k])!=0:
+            trainx[k] = [trainx[k][i]/max(trainx[k]) for i in range(bins - 1)]
+
+# for k in range(len(trainy)):
+#     if max(trainy[k])!=0:
+#             trainy[k] = [trainy[k][i]/max(trainy[k]) for i in range(bins - 1)]
+            
+for k in range(len(validx)):
+    if max(validx[k])!=0:
+            validx[k] = [validx[k][i]/max(validx[k]) for i in range(bins - 1)]
+            
+# for k in range(len(validy)):
+#     if max(validy[k])!=0:
+#             validy[k] = [validy[k][i]/max(validy[k]) for i in range(bins - 1)]
 
 # %%
 seed = 42
@@ -81,13 +99,13 @@ sess.run(init)
 
 # %%
 for step in range(10000):
-    # if step % 150 == 0:
-    #     if ic == gslist[gs]:
-    #         gs = gs + 1
-    #         ic = 1
-    #         sess.run(updatelearnrate)
-    #     else:
-    #         ic = ic + 1
+    if step % 150 == 0:
+        if ic == gslist[gs]:
+            gs = gs + 1
+            ic = 1
+            sess.run(updatelearnrate)
+        else:
+            ic = ic + 1
     if step %100 == 0:
         print (step, 'Train loss: ',sess.run(costfunc,feed_dict={X: trainx, Y: trainy}), 'Valid loss: ',sess.run(costfunc,feed_dict={X: validx, Y: validy}))
     sess.run(trainstep, feed_dict={X: trainx, Y: trainy})

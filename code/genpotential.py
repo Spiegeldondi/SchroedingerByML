@@ -47,7 +47,7 @@ def generatepot(style,param): #0=step,1=linear,2=fourier; 0-1 "jaggedness" scale
     return poten
 
 #%%
-for seed in range(9,10): 
+for seed in range(0,20): 
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
     npots = 200 #ends up being 3*this*(validnth-1)/validnth
@@ -83,11 +83,18 @@ for seed in range(9,10):
             training = optimzi.minimize(energy)
             sess.run(reinit)
             
+            # zero potential window
+            '''
             if i%validnth != 0:
                 a = 43
                 b = 84
                 window = [0]*(b-a)
                 vofx[a:b] = window
+            '''
+            
+            # normalize potential
+            if max(vofx)!= 0:
+                vofx = [vofx[i]/max(vofx) for i in range(len(vofx))]
             
             for t in range(20000):
                 sess.run(training)
