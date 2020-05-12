@@ -1,12 +1,3 @@
-# genpotential.py
-# This snippet of python code generates random potentials of 3 different types,
-# Step functions, piecewise linear functions, and random Fourier series.
-# Each of these types gets more “jagged” as generation progresses.
-# The ground state wavefunction of each potential is found using Tensorflow’s gradient
-# descent method on the energy functional given by the Schroedinger equation.
-# The potentials and solutions are partitioned into training and validation data
-# and saved with the random seed appended to the filename
-
 import csv
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,37 +8,24 @@ tf.disable_v2_behavior()
 path = '/home/domi/Dokumente/'
 
 #%%
-def subexp(expon):
-    return np.power(abs(np.log(np.random.uniform())),expon)
-
-def generatepot(style,param): #0=step,1=linear,2=fourier; 0-1 "jaggedness" scale
-    mu = 1. + bins*param #mean number of jump points for styles 0 + 1
-    forxp = 2.5 - 2*param #fourier exponent for style 2
-    scale = 5.0*(np.pi*np.pi*0.5) # energy scale
-    if style < 2:
-        dx = bins/mu
-        xlist = [-dx/2]
-        while xlist[-1] < bins:
-            xlist.append(xlist[-1]+dx*subexp(1.))
-        vlist = [scale*subexp(2.) for k in range(len(xlist))]
-        k = 0
-        poten = []
-        for l in range(1,bins):
-            while xlist[k+1] < l:
-                k = k + 1
-            if style == 0:
-                poten.append(vlist[k])
-            else:
-                poten.append(vlist[k]+(vlist[k+1]-vlist[k])*(l-xlist[k])/(xlist[k+1]-xlist[k]))
-    else:
-        sincoef = [(2*np.random.randint(2)-1.)*scale*subexp(2.)/np.power(k,forxp) for k in range(1,bins//2)]
-        coscoef = [(2*np.random.randint(2)-1.)*scale*subexp(2.)/np.power(k,forxp) for k in range(1,bins//2)]
-        zercoef = scale*subexp(2.)
-        poten = np.maximum(np.add(np.add(np.matmul(sincoef,sinval),np.matmul(coscoef,cosval)),zercoef),0).tolist()
-    return poten
+def generatepot(length):
+    pot = [0]*length    
+    check = False
+    
+    while check == False:
+        posM = np.random.randint(0, len(pot)+1)
+        w = np.random.randint(0, len(pot)+1)
+        h = np.random.randint(100, 300)
+        if w%2 != 0 and ((posM+int(w/2)) < len(pot)) and ((posM-int(w/2)) >= 0):
+            a = posM - int(w/2)
+            b = posM + 1 + int(w/2)
+            pot[a:b] = [h]*w
+            check = True
+    
+    return pot, a, (b-1), h
 
 #%%
-for seed in range(0,20): 
+for seed in range(0,5): 
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
     npots = 200 #ends up being 3*this*(validnth-1)/validnth
@@ -70,6 +48,9 @@ for seed in range(0,20):
     validpots = []
     wavefuncs = []
     validfuncs = []
+    
+    allInfo = []
+    k = 0
         
     sess = tf.Session()
     sess.run(init)
@@ -77,24 +58,15 @@ for seed in range(0,20):
         if i%10 == 0:
             print (str((100.*i)/npots) + '% complete')
         for j in range(3):
-            vofx = generatepot(j,(1.*i)/npots)
+            
+            allInfo.append(generatepot(127))
+            vofx = (allInfo[k])[0]
+            vofx = [np.float64(k) for k in vofx]
+            
             energy = tf.reduce_mean(tf.subtract(tf.multiply(tf.square(psi),tf.add(vofx,1.*bins*bins)),
                                                 tf.multiply(tf.multiply(tf.add(psil,psir),psi),0.5*bins*bins)))
             training = optimzi.minimize(energy)
             sess.run(reinit)
-            
-            # zero potential window
-            '''
-            if i%validnth != 0:
-                a = 43
-                b = 84
-                window = [0]*(b-a)
-                vofx[a:b] = window
-            '''
-            
-            # normalize potential UNNÖTIG HIER DA VOFX BEREITS ZUGEWIESEN
-            if max(vofx)!= 0:
-                vofx = [vofx[k]/max(vofx) for k in range(len(vofx))]
             
             for t in range(20000):
                 sess.run(training)
@@ -106,8 +78,7 @@ for seed in range(0,20):
             else:
                 potentials.append(vofx)
                 wavefuncs.append(sess.run(psi).tolist())
-    
-    
+  
     with open(path+'test_pots'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(potentials)

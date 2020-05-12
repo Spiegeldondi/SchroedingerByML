@@ -15,7 +15,7 @@ validx = []
 validy = []
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/B1_fixed_win_pots/'
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/C_windowPotentialsFixed/'
 
 # %% This is not a ... pythonic [barf]... way of reading data, but python is stupid about pointers, so deal with it
 for i in range(seedmax):
@@ -110,6 +110,7 @@ for step in range(10000):
         print (step, 'Train loss: ',sess.run(costfunc,feed_dict={X: trainx, Y: trainy}), 'Valid loss: ',sess.run(costfunc,feed_dict={X: validx, Y: validy}))
     sess.run(trainstep, feed_dict={X: trainx, Y: trainy})
     
+    # store error in lists
     train_loss_list.append(sess.run(costfunc,feed_dict={X: trainx, Y: trainy}))
     valid_loss_list.append(sess.run(costfunc,feed_dict={X: validx, Y: validy}))
     
@@ -119,11 +120,11 @@ for step in range(10000):
 # EXPORT LIST #
 ###############
 
-with open('/home/domi/Dokumente/SchroedingerByML/lossData/C_winPotFix/train_loss_list.csv', 'w') as csvfile:
+with open('/home/domi/Dokumente/BScPresentation/train_loss_list_A.csv', 'w') as csvfile:
     wr = csv.writer(csvfile)
     wr.writerow(train_loss_list)
     
-with open('/home/domi/Dokumente/SchroedingerByML/lossData/C_winPotFix/valid_loss_list.csv', 'w') as csvfile:
+with open('/home/domi/Dokumente/BScPresentation/valid_loss_list_A.csv', 'w') as csvfile:
     wr = csv.writer(csvfile)
     wr.writerow(valid_loss_list)
     
@@ -133,39 +134,142 @@ with open('/home/domi/Dokumente/SchroedingerByML/lossData/C_winPotFix/valid_loss
 # IMPORT LIST #
 ###############
 
-with open('/home/domi/Dokumente/SchroedingerByML/lossData/C/train_loss_list.csv') as csvfile:
+with open('/home/domi/Dokumente/SchroedingerByML/lossData/C_winPotFix/train_loss_list.csv') as csvfile:
     rd = csv.reader(csvfile)
     train_loss = list(rd)[0]
     
-with open('/home/domi/Dokumente/SchroedingerByML/lossData/C/valid_loss_list.csv') as csvfile:
+with open('/home/domi/Dokumente/SchroedingerByML/lossData/C_winPotFix/valid_loss_list.csv') as csvfile:
     rd = csv.reader(csvfile)
     valid_loss = list(rd)[0]
         
 train_loss_list = [float(x) for x in train_loss]
 valid_loss_list = [float(x) for x in valid_loss]
 
-train_loss_list = train_loss_list[0::10]
-valid_loss_list = valid_loss_list[0::10]
+# train_loss_list = train_loss_list[0::10]
+# valid_loss_list = valid_loss_list[0::10]
 
 # %%
 plt.grid(1)
-plt.title('training and validation error')
-plt.xlabel('epoch')
-plt.ylabel('loss')
-plt.plot([x*10 for x in range(len(train_loss_list))], train_loss_list, 'g', label='train loss')
-plt.plot([x*10 for x in range(len(valid_loss_list))], valid_loss_list, 'b', label='validation loss')
-plt.plot(valid_loss_list.index(min(valid_loss_list))*10, min(valid_loss_list), 'ro', label='validation loss minimum')
-plt.legend()
+#plt.title('Training and Validation Error', fontsize=32)
+plt.xlabel('step', fontsize=32)
+plt.ylabel('loss', fontsize=32)
+
+plt.plot([x for x in range(len(train_loss_list))][0::100], train_loss_list[0::100], 'orange', linewidth=3, label='train loss')
+plt.plot([x for x in range(len(valid_loss_list))][0::100], valid_loss_list[0::100], 'r', linewidth=3, label='validation loss')
+#plt.plot(valid_loss_list.index(min(valid_loss_list))*10, min(valid_loss_list), 'ro', label='validation loss minimum')
+
+plt.legend(fontsize=22)
+
+#%%
+plt.savefig('/home/domi/Dokumente/BScPresentation/lossWindowWIDE.png', orientation='landscape', transparent=True)
+
+#%%
+lw = 2
+
+plt.grid(1)
+plt.title('Randomly Generated Potentials', fontsize=32)
+plt.xlabel('x', fontsize=32)
+plt.ylabel('V(x)', fontsize=32)
+
+i_step = 0
+plot_step = []
+norm_step = max(trainx[i_step])
+list_step = [k/norm_step for k in trainx[i_step]]
+plt.plot(list_step, 'c', linewidth=lw, label='step')
+
+i_linear = 10
+plot_linear = []
+norm_linear = max(trainx[i_linear])
+list_linear = [k/norm_linear for k in trainx[i_linear]]
+plt.plot(list_linear,'m', linewidth=lw, label='linear')
+
+i_fourier = 17
+plot_fourier = []
+norm_fourier = max(trainx[i_fourier])
+list_fourier = [k/norm_fourier for k in trainx[i_fourier]]
+plt.plot(list_fourier, 'y', linewidth=lw, label='fourier')
+
+plt.legend(fontsize=18)
+
+#%%
+plt.savefig('/home/domi/Dokumente/BScPresentation/ThreePotentials3', orientation='landscape', transparent=True)
+
+#%%
+potenid = 0 # np.random.randint(0,2400)
+
+plt.title('Potential V(x)', fontsize=32)
+plt.grid(1)
+plt.xlabel('x', fontsize=32)
+plt.ylabel('V(x)', fontsize=32, color='c')
+
+plt.plot([trainx[potenid][i]/max(trainx[potenid]) for i in range(bins - 1)], 'c', label='V(x)', linewidth=2)
+#mp.plot(sess.run(L3,feed_dict={X: [trainx[potenid]]})[0], label='prediction')
+#plt.plot([trainy[potenid][i]/max(trainy[potenid]) for i in range(bins - 1)], label='$\Psi$(x)', linewidth=2)
+plt.legend(fontsize=18, loc='upper right')
+
+#%%
+# Create some mock data
+data1 = [trainx[potenid][i]/max(trainx[potenid]) for i in range(bins - 1)]
+data2 = [trainy[potenid][i]/max(trainy[potenid]) for i in range(bins - 1)]
+
+fig, ax1 = plt.subplots()
+
+plt.title('Potential V(x) and Wavefunction $\Psi$(x)', fontsize=32)
+plt.grid(1)
+
+color = 'c'
+ax1.set_xlabel('x', fontsize=32)
+ax1.set_ylabel('V(x)', fontsize=32, color=color)
+ax1.plot(data1, linewidth=2, color=color, label='V(x)')
+ax1.plot(data2, linewidth=2, color='b', label='$\Psi$(x)')
+ax1.tick_params(axis='y', labelcolor=color)
+plt.legend(fontsize=18, loc='upper right')
+
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+color = 'tab:blue'
+ax2.set_ylabel('$\Psi$(x)', fontsize=32, color=color)  # we already handled the x-label with ax1
+#ax2.plot(data2, linewidth=2, color=color, label='$\Psi$(x)')
+ax2.tick_params(axis='y', labelcolor=color)
+
+#fig.tight_layout()  # otherwise the right y-label is slightly clipped
+plt.show()
+
+#%%
+plt.savefig('/home/domi/Dokumente/BScPresentation/PotentialWithWavefunction', orientation='landscape', transparent=True)
 
 # %% display_nnout.py
 
-# Makes plots of an individual potential (scaled to unit max), the gradient descent (“correct”) ground state,
-# and the neural network predicted ground state
-# should be added to notebook containing schroedinger_nn.py
-import matplotlib.pyplot as mp
-potenid = np.random.randint(0,2400)
-mp.plot([trainx[potenid][i]/max(trainx[potenid]) for i in range(bins - 1)], label='potential')
-mp.plot(sess.run(L3,feed_dict={X: [trainx[potenid]]})[0], label='prediction')
-mp.plot(trainy[potenid], label='target')
-plt.legend()
-mp.show()
+potenid = 182 # np.random.randint(0,2400)
+prediction = sess.run(L3,feed_dict={X: [validx[potenid]]})[0]
+
+plt.grid(1)
+#plt.xlabel('x', fontsize=32)
+#plt.ylabel('$\Psi$(x)', fontsize=32)
+
+plt.plot([validx[potenid][i]/max(validx[potenid]) for i in range(bins - 1)], linewidth=3, label='potential V(x)', color='grey')
+plt.plot([validy[potenid][i]/max(validy[potenid]) for i in range(bins - 1)], c='orange', ls='-.', linewidth=3, label='true $\Psi$(x)')
+plt.plot([prediction[i]/max(prediction) for i in range(bins - 1)], 'r', linewidth=3, label='predicted $\Psi$(x)')
+
+plt.legend(fontsize=16, loc='upper left')
+plt.show()
+#%%
+plt.savefig('/home/domi/Dokumente/BScPresentation/ex5', orientation='landscape', transparent=True)
+
+#%% Histogram
+targ_norm = [validy[potenid][i]/max(validy[potenid]) for i in range(bins - 1)]
+pred_norm = [prediction[i]/max(prediction) for i in range(bins - 1)]
+plt.plot(targ_norm, pred_norm, 'bx')
+
+#%% Plot of Window Pots
+for x in range(len(trainx)):
+    if x%(1200) == 0:
+        k = np.random.randint(1,4800)
+        demo = [trainx[k][i]/max(trainx[k]) for i in range(127)]
+        plt.grid(1)
+        plt.xlabel('x', fontsize=32)
+        plt.ylabel('V(x)', fontsize=32)
+        plt.plot(demo, linewidth=3)
+        
+#%%
+plt.savefig('/home/domi/Dokumente/BScPresentation/windowPots', orientation='landscape', transparent=True)
