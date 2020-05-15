@@ -5,7 +5,7 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 #%%
-path = '/home/domi/Dokumente/'
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/D/'
 
 #%%
 def generatepot(length):
@@ -15,7 +15,7 @@ def generatepot(length):
     while check == False:
         posM = np.random.randint(0, len(pot)+1)
         w = np.random.randint(0, len(pot)+1)
-        h = np.random.randint(100, 300)
+        h = np.random.randint(100, 1000) # mix and max height of potential
         if w%2 != 0 and ((posM+int(w/2)) < len(pot)) and ((posM-int(w/2)) >= 0):
             a = posM - int(w/2)
             b = posM + 1 + int(w/2)
@@ -25,7 +25,7 @@ def generatepot(length):
     return pot, a, (b-1), h
 
 #%%
-for seed in range(0,5): 
+for seed in range(0,10): 
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
     npots = 200 #ends up being 3*this*(validnth-1)/validnth
@@ -50,6 +50,7 @@ for seed in range(0,5):
     validfuncs = []
     
     allInfo = []
+    boxInfo = []
     k = 0
         
     sess = tf.Session()
@@ -60,8 +61,11 @@ for seed in range(0,5):
         for j in range(3):
             
             allInfo.append(generatepot(127))
+            boxInfo.append(allInfo[k][1:4])
             vofx = (allInfo[k])[0]
-            vofx = [np.float64(k) for k in vofx]
+            vofx = [np.float64(n) for n in vofx]
+            
+            k += 1
             
             energy = tf.reduce_mean(tf.subtract(tf.multiply(tf.square(psi),tf.add(vofx,1.*bins*bins)),
                                                 tf.multiply(tf.multiply(tf.add(psil,psir),psi),0.5*bins*bins)))
@@ -72,23 +76,31 @@ for seed in range(0,5):
                 sess.run(training)
                 sess.run(renorm)
                 
-            if i%validnth == 0:
-                validpots.append(vofx)
-                validfuncs.append(sess.run(psi).tolist())
-            else:
-                potentials.append(vofx)
-                wavefuncs.append(sess.run(psi).tolist())
+            # if i%validnth == 0:
+            #     validpots.append(vofx)
+            #     validfuncs.append(sess.run(psi).tolist())
+            # else:
+            #     potentials.append(vofx)
+            #     wavefuncs.append(sess.run(psi).tolist())
+                
+            potentials.append(vofx)
+            wavefuncs.append(sess.run(psi).tolist())
   
-    with open(path+'test_pots'+str(seed)+'.csv', 'w') as f:
+    with open(path+'test_pots/test_pots'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(potentials)
-    with open(path+'valid_pots'+str(seed)+'.csv', 'w') as f:
+    with open(path+'valid_pots/valid_pots'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(validpots)
-    with open(path+'test_out'+str(seed)+'.csv', 'w') as f:
+    with open(path+'test_out/test_out'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(wavefuncs)
-    with open(path+'valid_out'+str(seed)+'.csv', 'w') as f:
+    with open(path+'valid_out/valid_out'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(validfuncs)
+
+    with open(path+'boxInfo/'+'test'+str(seed)+'.csv', 'w') as f:
+        fileout = csv.writer(f)
+        fileout.writerows(boxInfo)
+        
     print ('Output complete')

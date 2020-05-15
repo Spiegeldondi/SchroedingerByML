@@ -69,6 +69,8 @@ sess.run(init)
 vofx = generatepot(0,1)
 
 #%%
+
+#%%
 vofx_smooth_np = (np.array(savgol_filter(vofx, 25, 3))).astype('float32')
 # vofx_smooth_np = (np.array(vofx)).astype('float32')
 
@@ -105,6 +107,7 @@ steps = domain[-1] - domain[0]
 
 xvals = np.linspace(domain[0], domain[-1], steps+1)
 yinterp = np.interp(xvals, domain, potential)
+#plt.plot(vofx)
 plt.plot(domain, potential, 'o', label='local extrema')
 plt.plot(xvals, yinterp, label='linear interpolation')
 plt.legend(loc=1)
@@ -178,7 +181,7 @@ wavefuncs_norm = [psi / max(wavefuncs[1]) for psi in wavefuncs[1]]
 #%% PLOT POTENTIAL AND WAVEFUNCTION
 plt.plot(vofx_norm, label='V(x) original')
 plt.plot(wavefuncs_norm, label='Psi(x) original')
-plt.legend()
+plt.legend(loc='upper right')
 #%%
 sess = tf.Session()
 sess.run(init)
@@ -208,4 +211,12 @@ wavefuncs_smooth_norm = [psi / max(wavefuncs[2]) for psi in wavefuncs[2]]
 #%% PLOT POTENTIAL AND WAVEFUNCTION
 plt.plot(vofx_smooth_norm, label='V(x) smooth')
 plt.plot(wavefuncs_smooth_norm, label='Psi(x) smooth')
-plt.legend()
+plt.legend(loc='upper right')
+
+#%%
+plt.grid(1)
+plt.plot(vofx_norm, c='b', label='V(x) original')
+plt.plot(vofx_smooth_norm, c='r', label='V(x) smoothed')
+plt.plot(wavefuncs_norm, '-.', c='c', linewidth=3, label='Psi(x) original')
+plt.plot(wavefuncs_smooth_norm, c='m', linewidth=2, label='Psi(x) smoothed')
+plt.legend(loc='upper right')
