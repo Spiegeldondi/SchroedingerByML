@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
+#%%
 bins = 128
 seedmax = 20 # opens seed files 0 - 19. Lost too much data due to kernel crashes, so these got broken up
 trainx = []
@@ -18,7 +19,7 @@ validy = []
 path = '/home/domi/Dokumente/SchroedingerByML/potentials/D/'
 
 # %% This is not a ... pythonic [barf]... way of reading data, but python is stupid about pointers, so deal with it
-for i in range(0,3): #ACHTUNG ORIGINAL VON 0 BIS SEEDMAX WEG!!!
+for i in range(0,8): #ACHTUNG ORIGINAL VON 0 BIS SEEDMAX WEG!!!
     with open(path+'test_pots/test_pots'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
@@ -39,7 +40,7 @@ for i in range(0,3): #ACHTUNG ORIGINAL VON 0 BIS SEEDMAX WEG!!!
 #%%
 boxInfo = []   
 #%%         
-for i in range(0,3):
+for i in range(0,8):
     with open(path+'boxInfo/'+'test'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
@@ -80,16 +81,16 @@ updatelearnrate = tf.assign(learnrate,tf.multiply(learnrate,0.75))
 X = tf.placeholder(tf.float32)
 Y = tf.placeholder(tf.float32)
 #1st hidden layer
-W1 = tf.Variable(tf.random_uniform([3, bins-1], -1./bins, 1./bins))
-B1 = tf.Variable(tf.random_uniform([bins-1], -1., 1.))
+W1 = tf.Variable(tf.random_uniform([3, 127], -1./bins, 1./bins))
+B1 = tf.Variable(tf.random_uniform([127], -1., 1.))
 L1 = tf.nn.softplus(tf.matmul(X, W1) + B1)
 #2nd hidden layer
-W2 = tf.Variable(tf.random_uniform([bins-1, bins-1], -1./bins, 1./bins))
-B2 = tf.Variable(tf.random_uniform([bins-1], -1., 1.))
+W2 = tf.Variable(tf.random_uniform([127, 127], -1./bins, 1./bins))
+B2 = tf.Variable(tf.random_uniform([127], -1., 1.))
 L2 = tf.nn.softplus(tf.matmul(L1, W2) + B2)
 #Output layer
-W3 = tf.Variable(tf.random_uniform([bins-1, bins-1], -1./bins, 1./bins))
-B3 = tf.Variable(tf.random_uniform([bins-1], -1., 1.))
+W3 = tf.Variable(tf.random_uniform([127, 127], -1./bins, 1./bins))
+B3 = tf.Variable(tf.random_uniform([127], -1., 1.))
 L3 = tf.nn.softplus(tf.matmul(L2, W3) + B3)
 #Cost function
 costfunc = tf.reduce_mean(tf.square(tf.subtract(L3,Y)))
@@ -106,7 +107,7 @@ sess = tf.Session()
 sess.run(init)
 
 # %%
-for step in range(10000):
+for step in range(100000):
     if step % 150 == 0:
         if ic == gslist[gs]:
             gs = gs + 1

@@ -3,20 +3,18 @@ EINE KLEINE SPIELEREI MIT TENSORFLOW
 '''
 
 #%%
-
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 #%% tf.random_uniform
-
-tensor = tf.random_uniform([1000], -2, 2)
+tensor = tf.random_uniform([1000], -4, 4)
 
 with tf.Session() as sess:
     result = tensor.eval()
         
-# plt.plot(result, 'bo')
+plt.plot(result, 'bo')
 
 #%% tf.subtract
 

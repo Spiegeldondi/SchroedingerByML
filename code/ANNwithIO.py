@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
+#%%
 bins = 128
 seedmax = 20 # opens seed files 0 - 19. Lost too much data due to kernel crashes, so these got broken up
 trainx = []
@@ -36,23 +37,26 @@ for i in range(seedmax):
         for row in flurg:
             validy.append([float(num) for num in row])
             
-# %% Normalize Input
-            
-for k in range(len(trainx)):
-    if max(trainx[k])!=0:
-            trainx[k] = [trainx[k][i]/max(trainx[k]) for i in range(bins - 1)]
+#%%
+train_max_list = []
+for k in trainx:
+    train_max_list.append(max(k))
+         
+train_max = max(train_max_list)
 
-# for k in range(len(trainy)):
-#     if max(trainy[k])!=0:
-#             trainy[k] = [trainy[k][i]/max(trainy[k]) for i in range(bins - 1)]
+valid_max_list = []
+for k in validx:
+    valid_max_list.append(max(k))
+         
+valid_max = max(valid_max_list)
+
+
+# %% Normalize Input         
+for k in range(len(trainx)):
+    trainx[k] = [trainx[k][i]/train_max for i in range(bins - 1)]
             
 for k in range(len(validx)):
-    if max(validx[k])!=0:
-            validx[k] = [validx[k][i]/max(validx[k]) for i in range(bins - 1)]
-            
-# for k in range(len(validy)):
-#     if max(validy[k])!=0:
-#             validy[k] = [validy[k][i]/max(validy[k]) for i in range(bins - 1)]
+    validx[k] = [validx[k][i]/valid_max for i in range(bins - 1)]
 
 # %%
 seed = 42
@@ -98,7 +102,7 @@ sess = tf.Session()
 sess.run(init)
 
 # %%
-for step in range(10000):
+for step in range(100000):
     if step % 150 == 0:
         if ic == gslist[gs]:
             gs = gs + 1
@@ -107,7 +111,10 @@ for step in range(10000):
         else:
             ic = ic + 1
     if step %100 == 0:
-        print (step, 'Train loss: ',sess.run(costfunc,feed_dict={X: trainx, Y: trainy}), 'Valid loss: ',sess.run(costfunc,feed_dict={X: validx, Y: validy}))
+        print (step, 
+               'Train loss: ', sess.run(costfunc, feed_dict={X: trainx, Y: trainy}),
+               'Valid loss: ', sess.run(costfunc,feed_dict={X: validx, Y: validy}))
+    # actual training 
     sess.run(trainstep, feed_dict={X: trainx, Y: trainy})
     
     # store error in lists
@@ -154,8 +161,8 @@ plt.grid(1)
 plt.xlabel('step', fontsize=32)
 plt.ylabel('loss', fontsize=32)
 
-plt.plot([x for x in range(len(train_loss_list))][0::100], train_loss_list[0::100], 'orange', linewidth=3, label='train loss')
-plt.plot([x for x in range(len(valid_loss_list))][0::100], valid_loss_list[0::100], 'r', linewidth=3, label='validation loss')
+plt.plot([x for x in range(len(train_loss_list))][0::1], train_loss_list[0::1], 'orange', linewidth=3, label='train loss')
+plt.plot([x for x in range(len(valid_loss_list))][0::1], valid_loss_list[0::1], 'r', linewidth=3, label='validation loss')
 #plt.plot(valid_loss_list.index(min(valid_loss_list))*10, min(valid_loss_list), 'ro', label='validation loss minimum')
 
 plt.legend(fontsize=22)
@@ -195,7 +202,8 @@ plt.legend(fontsize=18)
 plt.savefig('/home/domi/Dokumente/BScPresentation/ThreePotentials3', orientation='landscape', transparent=True)
 
 #%%
-potenid = 0 # np.random.randint(0,2400)
+potenid = np.random.randint(0,9600)
+pred = sess.run(L3,feed_dict={X: [trainx[potenid]]})[0]
 
 plt.title('Potential V(x)', fontsize=32)
 plt.grid(1)
@@ -203,8 +211,8 @@ plt.xlabel('x', fontsize=32)
 plt.ylabel('V(x)', fontsize=32, color='c')
 
 plt.plot([trainx[potenid][i]/max(trainx[potenid]) for i in range(bins - 1)], 'c', label='V(x)', linewidth=2)
-#mp.plot(sess.run(L3,feed_dict={X: [trainx[potenid]]})[0], label='prediction')
-#plt.plot([trainy[potenid][i]/max(trainy[potenid]) for i in range(bins - 1)], label='$\Psi$(x)', linewidth=2)
+plt.plot(pred/max(pred), label='prediction')
+plt.plot([trainy[potenid][i]/max(trainy[potenid]) for i in range(bins - 1)], label='$\Psi$(x)', linewidth=2)
 plt.legend(fontsize=18, loc='upper right')
 
 #%%

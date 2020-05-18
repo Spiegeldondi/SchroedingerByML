@@ -15,7 +15,7 @@ def generatepot(length):
     while check == False:
         posM = np.random.randint(0, len(pot)+1)
         w = np.random.randint(0, len(pot)+1)
-        h = np.random.randint(100, 1000) # mix and max height of potential
+        h = np.random.randint(100, 1000) # min and max height of potential
         if w%2 != 0 and ((posM+int(w/2)) < len(pot)) and ((posM-int(w/2)) >= 0):
             a = posM - int(w/2)
             b = posM + 1 + int(w/2)
@@ -25,7 +25,7 @@ def generatepot(length):
     return pot, a, (b-1), h
 
 #%%
-for seed in range(0,10): 
+for seed in range(9,11): 
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
     npots = 200 #ends up being 3*this*(validnth-1)/validnth
