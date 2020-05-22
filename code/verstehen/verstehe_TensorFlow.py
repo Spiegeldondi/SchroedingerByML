@@ -9,7 +9,7 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 #%% tf.random_uniform
-tensor = tf.random_uniform([1000], -4, 4)
+tensor = tf.random_uniform([1000], -1./128, 1./128)
 
 with tf.Session() as sess:
     result = tensor.eval()

@@ -5,7 +5,7 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/D/'
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/D1/'
 
 #%%
 def generatepot(length):
@@ -25,7 +25,7 @@ def generatepot(length):
     return pot, a, (b-1), h
 
 #%%
-for seed in range(9,11): 
+for seed in range(5, 6): 
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
     npots = 200 #ends up being 3*this*(validnth-1)/validnth
@@ -72,7 +72,7 @@ for seed in range(9,11):
             training = optimzi.minimize(energy)
             sess.run(reinit)
             
-            for t in range(20000):
+            for t in range(2000):
                 sess.run(training)
                 sess.run(renorm)
                 

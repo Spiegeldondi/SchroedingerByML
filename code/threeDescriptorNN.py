@@ -16,10 +16,10 @@ validx = []
 validy = []
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/D/'
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/D1/'
 
 # %% This is not a ... pythonic [barf]... way of reading data, but python is stupid about pointers, so deal with it
-for i in range(0,8): #ACHTUNG ORIGINAL VON 0 BIS SEEDMAX WEG!!!
+for i in range(0,13): #ACHTUNG ORIGINAL VON 0 BIS SEEDMAX WEG!!!
     with open(path+'test_pots/test_pots'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
@@ -40,7 +40,7 @@ for i in range(0,8): #ACHTUNG ORIGINAL VON 0 BIS SEEDMAX WEG!!!
 #%%
 boxInfo = []   
 #%%         
-for i in range(0,8):
+for i in range(0,13):
     with open(path+'boxInfo/'+'test'+str(i)+'.csv', 'r') as csvfile:
         flurg = csv.reader(csvfile)
         for row in flurg:
@@ -81,16 +81,16 @@ updatelearnrate = tf.assign(learnrate,tf.multiply(learnrate,0.75))
 X = tf.placeholder(tf.float32)
 Y = tf.placeholder(tf.float32)
 #1st hidden layer
-W1 = tf.Variable(tf.random_uniform([3, 127], -1./bins, 1./bins))
-B1 = tf.Variable(tf.random_uniform([127], -1., 1.))
+W1 = tf.Variable(tf.random_uniform([3, bins-1], -1./bins, 1./bins))
+B1 = tf.Variable(tf.random_uniform([bins-1], -1., 1.))
 L1 = tf.nn.softplus(tf.matmul(X, W1) + B1)
 #2nd hidden layer
-W2 = tf.Variable(tf.random_uniform([127, 127], -1./bins, 1./bins))
-B2 = tf.Variable(tf.random_uniform([127], -1., 1.))
+W2 = tf.Variable(tf.random_uniform([bins-1, bins-1], -1./bins, 1./bins))
+B2 = tf.Variable(tf.random_uniform([bins-1], -1., 1.))
 L2 = tf.nn.softplus(tf.matmul(L1, W2) + B2)
 #Output layer
-W3 = tf.Variable(tf.random_uniform([127, 127], -1./bins, 1./bins))
-B3 = tf.Variable(tf.random_uniform([127], -1., 1.))
+W3 = tf.Variable(tf.random_uniform([bins-1, bins-1], -1./bins, 1./bins))
+B3 = tf.Variable(tf.random_uniform([bins-1], -1., 1.))
 L3 = tf.nn.softplus(tf.matmul(L2, W3) + B3)
 #Cost function
 costfunc = tf.reduce_mean(tf.square(tf.subtract(L3,Y)))
@@ -175,40 +175,6 @@ plt.plot([x for x in range(len(train_loss_list))][0::100], train_loss_list[0::10
 plt.legend(fontsize=22)
 
 #%%
-plt.savefig('/home/domi/Dokumente/BScPresentation/lossWindowWIDE.png', orientation='landscape', transparent=True)
-
-#%%
-lw = 2
-
-plt.grid(1)
-plt.title('Randomly Generated Potentials', fontsize=32)
-plt.xlabel('x', fontsize=32)
-plt.ylabel('V(x)', fontsize=32)
-
-i_step = 0
-plot_step = []
-norm_step = max(trainx[i_step])
-list_step = [k/norm_step for k in trainx[i_step]]
-plt.plot(list_step, 'c', linewidth=lw, label='step')
-
-i_linear = 10
-plot_linear = []
-norm_linear = max(trainx[i_linear])
-list_linear = [k/norm_linear for k in trainx[i_linear]]
-plt.plot(list_linear,'m', linewidth=lw, label='linear')
-
-i_fourier = 17
-plot_fourier = []
-norm_fourier = max(trainx[i_fourier])
-list_fourier = [k/norm_fourier for k in trainx[i_fourier]]
-plt.plot(list_fourier, 'y', linewidth=lw, label='fourier')
-
-plt.legend(fontsize=18)
-
-#%%
-plt.savefig('/home/domi/Dokumente/BScPresentation/ThreePotentials3', orientation='landscape', transparent=True)
-
-#%%
 potenid = 0 # np.random.randint(0,2400)
 
 plt.title('Potential V(x)', fontsize=32)
@@ -221,43 +187,14 @@ plt.plot([trainx[potenid][i]/max(trainx[potenid]) for i in range(bins - 1)], 'c'
 #plt.plot([trainy[potenid][i]/max(trainy[potenid]) for i in range(bins - 1)], label='$\Psi$(x)', linewidth=2)
 plt.legend(fontsize=18, loc='upper right')
 
-#%%
-# Create some mock data
-data1 = [trainx[potenid][i]/max(trainx[potenid]) for i in range(bins - 1)]
-data2 = [trainy[potenid][i]/max(trainy[potenid]) for i in range(bins - 1)]
 
-fig, ax1 = plt.subplots()
-
-plt.title('Potential V(x) and Wavefunction $\Psi$(x)', fontsize=32)
-plt.grid(1)
-
-color = 'c'
-ax1.set_xlabel('x', fontsize=32)
-ax1.set_ylabel('V(x)', fontsize=32, color=color)
-ax1.plot(data1, linewidth=2, color=color, label='V(x)')
-ax1.plot(data2, linewidth=2, color='b', label='$\Psi$(x)')
-ax1.tick_params(axis='y', labelcolor=color)
-plt.legend(fontsize=18, loc='upper right')
-
-ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-
-color = 'tab:blue'
-ax2.set_ylabel('$\Psi$(x)', fontsize=32, color=color)  # we already handled the x-label with ax1
-#ax2.plot(data2, linewidth=2, color=color, label='$\Psi$(x)')
-ax2.tick_params(axis='y', labelcolor=color)
-
-#fig.tight_layout()  # otherwise the right y-label is slightly clipped
-plt.show()
-
-#%%
-plt.savefig('/home/domi/Dokumente/BScPresentation/PotentialWithWavefunction', orientation='landscape', transparent=True)
 
 # %% display_nnout.py
 
 #ACHTUNG ZUR ZEIT ALLES AUF TRAIN-SET
 
-#potenid = np.random.randint(0,1800)
-potenid = 121
+potenid = np.random.randint(0,600)
+#potenid = 121
 prediction = sess.run(L3,feed_dict={X: [boxInfo[potenid]]})[0]
 
 plt.grid(1)
@@ -270,23 +207,99 @@ plt.plot([prediction[i]/max(prediction) for i in range(bins - 1)], 'r', linewidt
 
 plt.legend(fontsize=16, loc='upper right')
 plt.show()
+
+
 #%%
-plt.savefig('/home/domi/Dokumente/BScPresentation/ex5', orientation='landscape', transparent=True)
+count = 0
+boxInfo2 = []
+for k in range(len(boxInfo)):
+    height = boxInfo[k][2]
+    width = boxInfo[k][1]-boxInfo[k][0]
+    pos = boxInfo[k][0]+(boxInfo[k][1]-boxInfo[k][0])/2
+    
+    boxInfo2.append([pos, width, height])
 
-#%% Histogram
-targ_norm = [validy[potenid][i]/max(validy[potenid]) for i in range(bins - 1)]
-pred_norm = [prediction[i]/max(prediction) for i in range(bins - 1)]
-plt.plot(targ_norm, pred_norm, 'bx')
+    
+#%%
+'''
+INVESTIGATE SOME POTENTIALS
+'''
+seed = 0
+np.random.seed(seed)
+bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
+npots = 1 #ends up being 3*this*(validnth-1)/validnth
+validnth = 5 #every nth sample func is saved as validation
+sinval = np.sin([[np.pi*i*j/bins for i in range(1,bins)] for j in range(1,bins//2)])
+cosval = np.cos([[np.pi*i*j/bins for i in range(1,bins)] for j in range(1,bins//2)])
+sqrt2 = np.sqrt(2)
 
-#%% Plot of Window Pots
-for x in range(len(trainx)):
-    if x%(1200) == 0:
-        k = np.random.randint(1,4800)
-        demo = [trainx[k][i]/max(trainx[k]) for i in range(127)]
-        plt.grid(1)
-        plt.xlabel('x', fontsize=32)
-        plt.ylabel('V(x)', fontsize=32)
-        plt.plot(demo, linewidth=3)
+defgrdstate = tf.constant([sqrt2*np.sin(i*np.pi/bins) for i in range(1,bins)])
+psi = tf.Variable(defgrdstate)
+zerotens = tf.zeros([1])
+psil = tf.concat([psi[1:],zerotens],0)
+psir = tf.concat([zerotens,psi[:-1]],0)
+renorm = tf.assign(psi,tf.divide(psi,tf.sqrt(tf.reduce_mean(tf.square(psi)))))
+optimzi = tf.train.GradientDescentOptimizer(0.0625/bins)
+reinit = tf.assign(psi,defgrdstate)
+init = tf.global_variables_initializer()
+
+potentials = []
+validpots = []
+wavefuncs = []
+validfuncs = []
+
+allInfo = []
+boxInfo = []
+k = 0
+    
+sess = tf.Session()
+sess.run(init)
+for i in range(npots):
+    if i%10 == 0:
+        print (str((100.*i)/npots) + '% complete')
+    for j in range(1):
+        
+        vofx = trainx[466]
+        vofx = [np.float64(n) for n in vofx]
+        
+        k += 1
+        
+        energy = tf.reduce_mean(tf.subtract(tf.multiply(tf.square(psi),tf.add(vofx,1.*bins*bins)),
+                                            tf.multiply(tf.multiply(tf.add(psil,psir),psi),0.5*bins*bins)))
+        training = optimzi.minimize(energy)
+        sess.run(reinit)
+        
+        for t in range(2000):
+            sess.run(training)
+            sess.run(renorm)
+            
+        # if i%validnth == 0:
+        #     validpots.append(vofx)
+        #     validfuncs.append(sess.run(psi).tolist())
+        # else:
+        #     potentials.append(vofx)
+        #     wavefuncs.append(sess.run(psi).tolist())
+            
+        potentials.append(vofx)
+        wavefuncs.append(sess.run(psi).tolist())
         
 #%%
-plt.savefig('/home/domi/Dokumente/BScPresentation/windowPots', orientation='landscape', transparent=True)
+plt.plot(potentials[0])
+#%%
+plt.plot(wavefuncs[0])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
