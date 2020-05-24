@@ -42,23 +42,23 @@ v = 1/T
 w = 2*np.pi*v
 
 # spatial resolution and domain
-n = 127
+n = 1000
 x = np.linspace(0, T, n)
 
 # parameters of periodic function
-A = 10
-f = 4
+A = 1
+f = 0.5
 phi = np.pi*0
-d = 20
+d = np.pi/2*0
 
 # signal components
-# sig1 = A * np.sin(f * w * x + phi) + d
-# sig2 = 15 * np.sin(2 * w * x + phi) + 30
+sig1 = A * np.sin(f * w * x + phi) + d
+sig2 = 0.5 * np.sin(4 * w * x + phi) + 0
 # sig3 = 25 * np.sin(6 * w * x + phi) + 7
-sig1 = np.array(trainy[360])
+# sig1 = np.array(trainy[360])
 
 # signal assambly
-sgnl = sig1# + sig2 + sig3
+sgnl = sig1 + sig2# + sig3
 
 # frequency domain
 freqs = fftfreq(n) * n
@@ -97,8 +97,15 @@ A3 = (fft_phys[realFreqs][b3-1])
 b4 = np.where(fft_phys[realFreqs] == np.sort(fft_phys[realFreqs])[::-1][3])[0][0]+1 # artefact due to poor resolution !!
 A4 = (fft_phys[realFreqs][b4-1])
 
-sgnl_synth = yintercept+( A1 * np.sin(b1 * w * x + phi1) + A2 * np.sin(b2 * w * x + phi2) + A3 * np.sin(b3 * w * x + phi3) + A4 * np.sin(b4 * w * x + phi3) )
+sgnl_synth = yintercept + A1 * np.sin(b1 * w * x + phi1) + sig1# + A3 * np.sin(b3 * w * x + phi3) + A4 * np.sin(b4 * w * x + phi3) )
 # sgnl_synth = yintercept + ( A1 * np.sin(b1 * w * x + phi1))
+
+# FALLS ALSO die unterste schwingung eine Sinus schwingung mit Fq 0.5 ist
+# wie das bei mir der fall ist (bei schroedinger ml), dann ist es am
+# besten, diese basis schwingung manuell einzutragenm und die oberschwingungen
+# durch die fft zu ermitteln.
+# PROBLEME: y-intercept und wie vermeide ich, dass eines der As und bs zur
+# Grundschwingung gehört
                          
 plt.figure(1)
 plt.subplot(3,1,1)
