@@ -1,0 +1,4 @@
+D: single square peak mit 20k GD iterationen. Höhe 100 - 1000.
+D1: single square peak mit 2k GD iterationen. Höhe 100 - 1000.
+D1b: single square peak mit 2k GD iterationen. Höhe 600 - 601.
+D3: three square peaks mit 2k GD iterationen. Höhe 100 - 1000.

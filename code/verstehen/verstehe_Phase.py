@@ -4,47 +4,6 @@ import matplotlib.pyplot as plt
 from numpy.fft import fft, fftfreq
 
 #%%
-bins = 128
-seedmax = 20 # opens seed files 0 - 19. Lost too much data due to kernel crashes, so these got broken up
-trainx = []
-trainy = []
-validx = []
-validy = []
-
-#%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/'
-
-# %% This is not a ... pythonic [barf]... way of reading data, but python is stupid about pointers, so deal with it
-for i in range(seedmax):
-    with open(path+'test_pots/test_pots'+str(i)+'.csv', 'r') as csvfile:
-        flurg = csv.reader(csvfile)
-        for row in flurg:
-            trainx.append([float(num) for num in row])
-    with open(path+'test_out/test_out'+str(i)+'.csv', 'r') as csvfile:
-        flurg = csv.reader(csvfile)
-        for row in flurg:
-            trainy.append([float(num) for num in row])
-    with open(path+'valid_pots/valid_pots'+str(i)+'.csv', 'r') as csvfile:
-        flurg = csv.reader(csvfile)
-        for row in flurg:
-            validx.append([float(num) for num in row])
-    with open(path+'valid_out/valid_out'+str(i)+'.csv', 'r') as csvfile:
-        flurg = csv.reader(csvfile)
-        for row in flurg:
-            validy.append([float(num) for num in row])
-            
-#%%
-x = np.linspace(0, 126, 127)
-y = trainy[322]
-xvals = np.linspace(0, 126, 1000)
-yinterp = np.interp(xvals, x, y)
-
-plt.subplot(211)
-plt.plot(y)
-plt.subplot(212)
-plt.plot(yinterp)
-
-#%%
 # period and frequency
 T = 1
 v = 1/T
@@ -57,20 +16,31 @@ n = 1000
 x = np.linspace(0, T, n)
 
 # parameters of periodic function
-A = 1
-f = 0.5
-phi = np.pi*0
-d = np.pi/2*0
+A1 = 8
+f1 = 1
+phi1 = np.pi*0.5
+d1 = 0
+
+A2 = 6
+f2 = 2
+phi2 = -1*np.pi*1
+d2 = 0
+
+A3 = 0
+f3 = 3
+phi3 = np.pi*0
+d3 = 0
 
 # signal components
-sig1 = A * np.sin(f * w * x + phi) + d
-sig2 = 0.5 * np.sin(4 * w * x + phi) + 0
-# sig3 = 25 * np.sin(6 * w * x + phi) + 7
-# sig1 = np.array(trainy[360])
+sig1 = A1 * np.sin(f1 * w * x + phi1) + d1
+sig2 = A2 * np.sin(f2 * w * x + phi2) + d2
+sig3 = A3 * np.sin(f3 * w * x + phi3) + d3
+
+# s2 = 0
+# s3 = 0
 
 # signal assambly
-sgnl = sig1 + sig2# + sig3
-sgnl = yinterp
+sgnl = sig1 + sig2 + sig3
 
 # frequency domain
 freqs = fftfreq(n) * n
@@ -83,6 +53,56 @@ fft_vals = fft(sgnl)
 
 # true physical fft
 fft_phys = 2.0*np.abs(fft_vals/n)
+
+#%% für Cosnis. funtioniert für pi aus [0, 2*pi)
+def cosShift(re, im):
+    shift = np.arctan2(im, re) * 180/np.pi
+    shift = np.floor(shift)
+    if shift < 0:
+        shift += 360
+    return shift
+
+re1 = fft_vals.real[f1]
+im1 = fft_vals.imag[f1]
+
+re2 = fft_vals.real[f2]
+im2 = fft_vals.imag[f2]
+
+re3 = fft_vals.real[f3]
+im3 = fft_vals.imag[f3]
+
+s1 = cosShift(re1, im1)*np.pi/180
+s2 = cosShift(re2, im2)*np.pi/180
+s3 = cosShift(re3, im3)*np.pi/180
+
+print(s1,s2,s3)
+
+#%%
+sgnl_synth = A1 * np.cos(f1 * w * x + s1) + d1 + A2 * np.cos(f2 * w * x + s2) + d2 + A3 * np.cos(f3 * w * x + s3) + d3
+
+plt.figure(1)
+
+plt.subplot(411)
+plt.grid(1)
+#plt.title('Signal')
+plt.plot(sgnl)
+plt.plot(sgnl_synth)
+
+plt.subplot(412)
+plt.grid(1)
+#plt.title('Real Part')
+plt.plot(fft_vals.real, '.')
+
+plt.subplot(413)
+plt.grid(1)
+#plt.title('Imag Part')
+plt.plot(fft_vals.imag, '.')
+
+plt.subplot(414)
+plt.grid(1)
+#plt.title('Absolute Value')
+plt.plot(np.abs(fft_vals), '.')
+
 
 #%%
 
@@ -109,7 +129,7 @@ A3 = (fft_phys[realFreqs][b3-1])
 b4 = np.where(fft_phys[realFreqs] == np.sort(fft_phys[realFreqs])[::-1][3])[0][0]+1 # artefact due to poor resolution !!
 A4 = (fft_phys[realFreqs][b4-1])
 
-sgnl_synth = yintercept + A1 * np.sin(b1 * w * x + phi1) + sig1 + A3 * np.sin(b3 * w * x + phi3) + A4 * np.sin(b4 * w * x + phi3)
+sgnl_synth = yintercept + A1 * np.sin(b1 * w * x + phi1) + sig1# + A3 * np.sin(b3 * w * x + phi3) + A4 * np.sin(b4 * w * x + phi3) )
 # sgnl_synth = yintercept + ( A1 * np.sin(b1 * w * x + phi1))
 
 # FALLS ALSO die unterste schwingung eine Sinus schwingung mit Fq 0.5 ist
@@ -143,7 +163,7 @@ plt.legend(loc='upper right')
 
 plt.subplot(3,1,1)
 plt.grid(1)
-plt.plot(x, sgnl_synth, label='signal (synthesized)')
+plt.plot(x, sgnl_synth, 'x', label='signal (synthesized)')
 plt.legend(loc='upper right')
 
 

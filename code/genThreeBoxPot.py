@@ -5,7 +5,7 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/D3/'
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/'
 
 #%%
 def generatepot(length):

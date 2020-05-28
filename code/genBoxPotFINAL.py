@@ -5,7 +5,7 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/D1/'
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/D1b/'
 
 #%%
 def generatepot(length):
@@ -15,7 +15,7 @@ def generatepot(length):
     while check == False:
         posM = np.random.randint(0, len(pot)+1)
         w = np.random.randint(0, len(pot)+1)
-        h = np.random.randint(100, 1000) # min and max height of potential
+        h = np.random.randint(600, 601) # min and max height of potential
         if w%2 != 0 and ((posM+int(w/2)) < len(pot)) and ((posM-int(w/2)) >= 0):
             a = posM - int(w/2)
             b = posM + 1 + int(w/2)
@@ -25,7 +25,7 @@ def generatepot(length):
     return pot, a, (b-1), h
 
 #%%
-for seed in range(5, 6): 
+for seed in range(1, 10): 
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
     npots = 200 #ends up being 3*this*(validnth-1)/validnth

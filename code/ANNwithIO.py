@@ -16,8 +16,8 @@ validx = []
 validy = []
 
 #%%
-# path = '/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/'
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/D1/'
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/'
+# path = '/home/domi/Dokumente/SchroedingerByML/potentials/D1/'
 
 # %% This is not a ... pythonic [barf]... way of reading data, but python is stupid about pointers, so deal with it
 for i in range(seedmax):
@@ -113,14 +113,14 @@ for step in range(100000):
             ic = ic + 1
     if step %100 == 0:
         print (step, 
-               'Train loss: ', sess.run(costfunc, feed_dict={X: trainx, Y: trainy}))#,
-               #'Valid loss: ', sess.run(costfunc,feed_dict={X: validx, Y: validy}))
+               'Train loss: ', sess.run(costfunc, feed_dict={X: trainx, Y: trainy}),
+               'Valid loss: ', sess.run(costfunc,feed_dict={X: validx, Y: validy}))
     # actual training 
     sess.run(trainstep, feed_dict={X: trainx, Y: trainy})
     
     # store error in lists
     train_loss_list.append(sess.run(costfunc,feed_dict={X: trainx, Y: trainy}))
-    #valid_loss_list.append(sess.run(costfunc,feed_dict={X: validx, Y: validy}))
+    valid_loss_list.append(sess.run(costfunc,feed_dict={X: validx, Y: validy}))
     
 # %%
 
