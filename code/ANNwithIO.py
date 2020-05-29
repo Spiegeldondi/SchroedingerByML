@@ -9,7 +9,7 @@ tf.disable_v2_behavior()
 
 #%%
 bins = 128
-seedmax = 20 # opens seed files 0 - 19. Lost too much data due to kernel crashes, so these got broken up
+seedmax = 10 # opens seed files 0 - 19. Lost too much data due to kernel crashes, so these got broken up
 trainx = []
 trainy = []
 validx = []

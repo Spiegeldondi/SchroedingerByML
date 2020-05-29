@@ -30,6 +30,7 @@ def cosShift(re, im):
         shift += 360
     return shift
 
+#%%
 # interpolate wavefunction for more precise FFT
 index = np.random.randint(0, 9600)
 x = np.linspace(0, 126, 127)
@@ -65,7 +66,7 @@ fft_phys = 2.0*np.abs(fft_vals/n)
 
 # compose signal out of sinusoidal paramteres
 sgnl_synth = 0
-for f in range(1, 1000):
+for f in range(1, 9):
     Asynth = fft_phys[f]
     re = fft_vals.real[f]
     im = fft_vals.imag[f]
@@ -73,8 +74,10 @@ for f in range(1, 1000):
     sgnl_synth += Asynth * np.cos(f * w * x + s)
 
 # plot analyzed and synthized wavefunctions
-plt.plot(sgnl[0:1000], linewidth=6)
-plt.plot(sgnl_synth[0:1000], linewidth=6)
+plt.grid(1)
+plt.plot(sgnl[0:1000], linewidth=2, label='original Signal')
+plt.plot(sgnl_synth[0:1000], linewidth=2, label='synthesized Signal')
+plt.legend()
 plt.tight_layout()
 
 # plot all information
@@ -91,12 +94,12 @@ plt.plot(xsynth, sgnl_synth)
 
 plt.subplot(513)
 plt.grid(1)
-plt.title('Real Part')
+plt.title('Real Spectrum')
 plt.plot(fft_vals.real, '.')
 
 plt.subplot(514)
 plt.grid(1)
-plt.title('Imaginary Part')
+plt.title('Imaginary Spectrum')
 plt.plot(fft_vals.imag, '.')
 
 plt.subplot(515)

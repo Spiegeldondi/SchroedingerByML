@@ -129,11 +129,11 @@ for step in range(100000):
 # EXPORT LIST #
 ###############
 
-with open('/home/domi/Dokumente/BScPresentation/train_loss_list_A.csv', 'w') as csvfile:
+with open('/home/domi/Schreibtisch/Dg/train_loss_list_gauss.csv', 'w') as csvfile:
     wr = csv.writer(csvfile)
     wr.writerow(train_loss_list)
     
-with open('/home/domi/Dokumente/BScPresentation/valid_loss_list_A.csv', 'w') as csvfile:
+with open('/home/domi/Schreibtisch/Dg/valid_loss_list_gauss.csv', 'w') as csvfile:
     wr = csv.writer(csvfile)
     wr.writerow(valid_loss_list)
     
@@ -187,14 +187,12 @@ plt.plot([trainx[potenid][i]/max(trainx[potenid]) for i in range(bins - 1)], 'c'
 #plt.plot([trainy[potenid][i]/max(trainy[potenid]) for i in range(bins - 1)], label='$\Psi$(x)', linewidth=2)
 plt.legend(fontsize=18, loc='upper right')
 
-
-
 # %% display_nnout.py
 
 #ACHTUNG ZUR ZEIT ALLES AUF TRAIN-SET
 
-potenid = np.random.randint(0,600)
-#potenid = 121
+# potenid = np.random.randint(0,6000)
+potenid = 5334
 prediction = sess.run(L3,feed_dict={X: [boxInfo[potenid]]})[0]
 
 plt.grid(1)
@@ -207,7 +205,8 @@ plt.plot([prediction[i]/max(prediction) for i in range(bins - 1)], 'r', linewidt
 
 plt.legend(fontsize=16, loc='upper right')
 plt.show()
-
+#%%
+plt.savefig('/home/domi/Schreibtisch/Dg/5334.png', orientation='landscape', transparent=True)
 
 #%%
 count = 0
