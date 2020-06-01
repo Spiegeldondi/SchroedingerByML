@@ -128,11 +128,11 @@ for step in range(100000):
 # EXPORT LIST #
 ###############
 
-with open('/home/domi/Dokumente/BScPresentation/train_loss_list_A.csv', 'w') as csvfile:
+with open('/home/domi/Dokumente/train_loss_list_HalfA.csv', 'w') as csvfile:
     wr = csv.writer(csvfile)
     wr.writerow(train_loss_list)
     
-with open('/home/domi/Dokumente/BScPresentation/valid_loss_list_A.csv', 'w') as csvfile:
+with open('/home/domi/Dokumente/valid_loss_list_HalfA.csv', 'w') as csvfile:
     wr = csv.writer(csvfile)
     wr.writerow(valid_loss_list)
     
@@ -203,7 +203,8 @@ plt.legend(fontsize=18)
 plt.savefig('/home/domi/Dokumente/BScPresentation/ThreePotentials3', orientation='landscape', transparent=True)
 
 #%%
-potenid = np.random.randint(0,9600)
+# potenid = np.random.randint(0,4800)
+potenid = 2012
 pred = sess.run(L3,feed_dict={X: [trainx[potenid]]})[0]
 
 plt.title('Potential V(x)', fontsize=32)

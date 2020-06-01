@@ -77,9 +77,9 @@ X_train = np.array(trainx)
 y_train = np.array(trainy)
 
 model = keras.models.Sequential()
-model.add(keras.layers.Dense(127, input_shape=[127,], activation="softplus"))
+model.add(keras.layers.Dense(127, input_shape=(127,), activation="softplus"))
 model.add(keras.layers.Dense(127, activation="softplus"))
-model.add(keras.layers.Dense(127, activation="softplus"))
+model.add(keras.layers.Dense(127))
 
 keras.backend.clear_session()
 np.random.seed(42)

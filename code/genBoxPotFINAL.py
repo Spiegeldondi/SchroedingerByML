@@ -5,7 +5,7 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/D1b/'
+path = '/home/domi/Dokumente/'
 
 #%%
 def generatepot(length):
@@ -23,9 +23,23 @@ def generatepot(length):
             check = True
     
     return pot, a, (b-1), h
+#%%
+def generatepot(length):
+    pot = [0]*length  
+    h = np.random.randint(128, 256) 
+    check = True
+    while check:
+      a = np.random.randint(16, 112)
+      b = np.random.randint(16, 112)
+      w = abs(b - a)
+      if a < b:
+        check = False
+        pot[a:b] = [h]*w
+    
+    return pot, a, b, h
 
 #%%
-for seed in range(1, 10): 
+for seed in range(2, 10): 
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
     npots = 200 #ends up being 3*this*(validnth-1)/validnth
@@ -85,21 +99,21 @@ for seed in range(1, 10):
                 
             potentials.append(vofx)
             wavefuncs.append(sess.run(psi).tolist())
-  
-    with open(path+'test_pots/test_pots'+str(seed)+'.csv', 'w') as f:
+
+    with open(path+'test_pots'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(potentials)
-    with open(path+'valid_pots/valid_pots'+str(seed)+'.csv', 'w') as f:
+    with open(path+'valid_pots'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(validpots)
-    with open(path+'test_out/test_out'+str(seed)+'.csv', 'w') as f:
+    with open(path+'test_out'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(wavefuncs)
-    with open(path+'valid_out/valid_out'+str(seed)+'.csv', 'w') as f:
+    with open(path+'valid_out'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(validfuncs)
 
-    with open(path+'boxInfo/'+'test'+str(seed)+'.csv', 'w') as f:
+    with open(path+'test'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(boxInfo)
         

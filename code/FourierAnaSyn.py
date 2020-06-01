@@ -66,7 +66,7 @@ fft_phys = 2.0*np.abs(fft_vals/n)
 
 # compose signal out of sinusoidal paramteres
 sgnl_synth = 0
-for f in range(1, 9):
+for f in range(1, 200):
     Asynth = fft_phys[f]
     re = fft_vals.real[f]
     im = fft_vals.imag[f]
