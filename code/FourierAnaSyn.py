@@ -31,10 +31,11 @@ def cosShift(re, im):
     return shift
 
 #%%
-# interpolate wavefunction for more precise FFT
+# increase spatial resolution of wavefunction
+# by interpolation for more precise FFT
 index = np.random.randint(0, 9600)
 x = np.linspace(0, 126, 127)
-y = trainy[index]
+y = trainy[9]
 xvals = np.linspace(0, 126, 1000)
 yinterp = np.interp(xvals, x, y)
 
@@ -73,7 +74,7 @@ for f in range(1, 200):
     s =  cosShift(re, im)*np.pi/180
     sgnl_synth += Asynth * np.cos(f * w * x + s)
 
-# plot analyzed and synthized wavefunctions
+# plot analyzed and synthesized wavefunctions
 plt.grid(1)
 plt.plot(sgnl[0:1000], linewidth=2, label='original Signal')
 plt.plot(sgnl_synth[0:1000], linewidth=2, label='synthesized Signal')
@@ -89,7 +90,7 @@ plt.plot(sgnl)
 
 plt.subplot(512)
 plt.grid(1)
-plt.title('Synthized Signal')
+plt.title('Synthesized Signal')
 plt.plot(xsynth, sgnl_synth)
 
 plt.subplot(513)

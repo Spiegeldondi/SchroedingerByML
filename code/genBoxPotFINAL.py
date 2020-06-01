@@ -39,7 +39,7 @@ def generatepot(length):
     return pot, a, b, h
 
 #%%
-for seed in range(2, 10): 
+for seed in range(0, 1): 
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
     npots = 200 #ends up being 3*this*(validnth-1)/validnth
