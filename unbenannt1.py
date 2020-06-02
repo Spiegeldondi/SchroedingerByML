@@ -49,7 +49,7 @@ for i in range(1, 10):
     file = "/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/valid_out/valid_out"+str(i)+".csv"
     y_valid = np.vstack((y_valid, np.genfromtxt(file, delimiter=',')))
     
-# %%
+# %% FOURIER FOURIER FOURIER
 y_train = np.array([fourierDecomp(x) for x in y_train])
 y_valid = np.array([fourierDecomp(x) for x in y_valid])
     
@@ -62,7 +62,7 @@ X_valid = X_valid/data_max
 model = keras.models.Sequential()
 model.add(keras.layers.Dense(127, activation="softplus", input_shape=X_train.shape[1:]))
 model.add(keras.layers.Dense(127, activation="softplus"))
-model.add(keras.layers.Dense(24))
+model.add(keras.layers.Dense(127, activation="softplus"))
 
 model.compile(loss="mean_squared_error", 
               optimizer="adam")
