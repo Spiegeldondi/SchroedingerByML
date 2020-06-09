@@ -35,7 +35,7 @@ def cosShift(re, im):
 # by interpolation for more precise FFT
 index = np.random.randint(0, 9600)
 x = np.linspace(0, 126, 127)
-y = trainy[9]
+y = trainy[index]
 xvals = np.linspace(0, 126, 1000)
 yinterp = np.interp(xvals, x, y)
 
@@ -67,7 +67,7 @@ fft_phys = 2.0*np.abs(fft_vals/n)
 
 # compose signal out of sinusoidal paramteres
 sgnl_synth = 0
-for f in range(1, 200):
+for f in range(1, 12):
     Asynth = fft_phys[f]
     re = fft_vals.real[f]
     im = fft_vals.imag[f]

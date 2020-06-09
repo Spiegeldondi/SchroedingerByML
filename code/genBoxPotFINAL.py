@@ -5,7 +5,7 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 #%%
-path = '/home/domi/Dokumente/'
+path = '/home/domi/Dokumente/RPB_256_1024_float/'
 
 #%%
 def generatepot(length):
@@ -26,7 +26,7 @@ def generatepot(length):
 #%%
 def generatepot(length):
     pot = [0]*length  
-    h = np.random.randint(128, 256) 
+    h = np.random.uniform(256, 1024) 
     check = True
     while check:
       a = np.random.randint(24, 104)
@@ -39,7 +39,7 @@ def generatepot(length):
     return pot, a, b, h
 
 #%%
-for seed in range(1, 10): 
+for seed in range(4, 12): 
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
     npots = 200 #ends up being 3*this*(validnth-1)/validnth

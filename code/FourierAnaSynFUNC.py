@@ -60,6 +60,12 @@ def fourierDecomp(wavefunction):
         im = fft_vals.imag[f]
         s =  cosShift(re, im)*np.pi/180
         sgnl_synth += Asynth * np.cos(f * w * x + s)
+        # if s > np.pi:
+        #     sgnl_synth += Asynth * np.sin(f * w * x)                    
+        #     Afs.append(1)
+        # if s < np.pi:
+        #     sgnl_synth += Asynth * (-1.) * np.sin(f * w * x)
+        #     Afs.append(-1)
         
         A_list.append(Asynth)
         f_list.append(f)
