@@ -16,7 +16,7 @@ validx = []
 validy = []
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/'
+path = '/home/domi/Dokumente/SchroedingerByML/potentials/A1/'
 # path = '/home/domi/Dokumente/SchroedingerByML/potentials/D1/'
 
 # %% This is not a ... pythonic [barf]... way of reading data, but python is stupid about pointers, so deal with it

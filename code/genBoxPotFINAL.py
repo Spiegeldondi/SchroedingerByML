@@ -5,7 +5,7 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 #%%
-path = '/home/domi/Dokumente/RPB_256_1024_float/'
+path = '/home/domi/Dokumente/RPB_256_1024_float (exclusion)/'
 
 #%%
 def generatepot(length):
@@ -38,8 +38,29 @@ def generatepot(length):
     
     return pot, a, b, h
 
+#%% exclusion window
+def generatepot(length):
+    pot = [0]*length  
+    h = np.random.uniform(256, 1024) 
+    check = True
+    while check:
+      exclusion = np.random.randint(2)
+      if exclusion:
+          a = np.random.randint(20, 46)
+          b = np.random.randint(20, 46)
+      else:
+          a = np.random.randint(82, 110)
+          b = np.random.randint(82, 110)
+      w = abs(b - a)
+      if a < b:
+        check = False
+        pot[a:b] = [h]*w
+    
+    return pot, a, b, h
+
+
 #%%
-for seed in range(4, 12): 
+for seed in range(17, 20): 
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
     npots = 200 #ends up being 3*this*(validnth-1)/validnth

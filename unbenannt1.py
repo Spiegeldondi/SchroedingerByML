@@ -37,28 +37,28 @@ for i in range(1, 12):
 
 
 #%% STANDARD APPROACH
-file = "/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/test_pots/test_pots0.csv"
+file = "/home/domi/Dokumente/SchroedingerByML/potentials/A1/test_pots/test_pots0.csv"
 X_train = np.genfromtxt(file, delimiter=',') # load first instance
 for i in range(1, 10): # load remaining instances
-    file = "/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/test_pots/test_pots"+str(i)+".csv"
+    file = "/home/domi/Dokumente/SchroedingerByML/potentials/A1/test_pots/test_pots"+str(i)+".csv"
     X_train = np.vstack((X_train, np.genfromtxt(file, delimiter=',')))
     
-file = "/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/valid_pots/valid_pots0.csv"
+file = "/home/domi/Dokumente/SchroedingerByML/potentials/A1/valid_pots/valid_pots0.csv"
 X_valid = np.genfromtxt(file, delimiter=',')
 for i in range(1, 10):
-    file = "/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/valid_pots/valid_pots"+str(i)+".csv"
+    file = "/home/domi/Dokumente/SchroedingerByML/potentials/A1/valid_pots/valid_pots"+str(i)+".csv"
     X_valid = np.vstack((X_valid, np.genfromtxt(file, delimiter=',')))
     
-file = "/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/test_out/test_out0.csv"
+file = "/home/domi/Dokumente/SchroedingerByML/potentials/A1/test_out/test_out0.csv"
 y_train = np.genfromtxt(file, delimiter=',')
 for i in range(1, 10):
-    file = "/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/test_out/test_out"+str(i)+".csv"
+    file = "/home/domi/Dokumente/SchroedingerByML/potentials/A1/test_out/test_out"+str(i)+".csv"
     y_train = np.vstack((y_train, np.genfromtxt(file, delimiter=',')))
     
-file = "/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/valid_out/valid_out0.csv"
+file = "/home/domi/Dokumente/SchroedingerByML/potentials/A1/valid_out/valid_out0.csv"
 y_valid = np.genfromtxt(file, delimiter=',')
 for i in range(1, 10):
-    file = "/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/valid_out/valid_out"+str(i)+".csv"
+    file = "/home/domi/Dokumente/SchroedingerByML/potentials/A1/valid_out/valid_out"+str(i)+".csv"
     y_valid = np.vstack((y_valid, np.genfromtxt(file, delimiter=',')))
 #%%   Asdjasd
 file = "/home/domi/Dokumente/SchroedingerByML/potentials/A_original_potentials/test_pots/test_pots0.csv"
