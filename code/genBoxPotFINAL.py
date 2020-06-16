@@ -5,7 +5,7 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 #%%
-path = '/home/domi/Dokumente/RPB_256_1024_float (exclusion)/'
+path = '/home/domi/Dokumente/BA/data/2maxWidth32/'
 
 #%%
 def generatepot(length):
@@ -29,10 +29,10 @@ def generatepot(length):
     h = np.random.uniform(256, 1024) 
     check = True
     while check:
-      a = np.random.randint(24, 104)
-      b = np.random.randint(24, 104)
+      a = np.random.randint(24, 102)
+      b = np.random.randint(24, 102)
       w = abs(b - a)
-      if a < b:
+      if (a < b) & (w >= 8) & (w <= 32):
         check = False
         pot[a:b] = [h]*w
     
@@ -60,7 +60,7 @@ def generatepot(length):
 
 
 #%%
-for seed in range(17, 20): 
+for seed in range(0, 12): 
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
     npots = 200 #ends up being 3*this*(validnth-1)/validnth
@@ -124,15 +124,15 @@ for seed in range(17, 20):
     with open(path+'test_pots'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(potentials)
-    with open(path+'valid_pots'+str(seed)+'.csv', 'w') as f:
-        fileout = csv.writer(f)
-        fileout.writerows(validpots)
+    # with open(path+'valid_pots'+str(seed)+'.csv', 'w') as f:
+    #     fileout = csv.writer(f)
+    #     fileout.writerows(validpots)
     with open(path+'test_out'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(wavefuncs)
-    with open(path+'valid_out'+str(seed)+'.csv', 'w') as f:
-        fileout = csv.writer(f)
-        fileout.writerows(validfuncs)
+    # with open(path+'valid_out'+str(seed)+'.csv', 'w') as f:
+    #     fileout = csv.writer(f)
+    #     fileout.writerows(validfuncs)
 
     with open(path+'test'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)

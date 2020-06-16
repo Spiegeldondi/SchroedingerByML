@@ -5,7 +5,7 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
 #%%
-path = '/home/domi/Dokumente/SchroedingerByML/potentials/Dg/'
+path = '/home/domi/Dokumente/BA/data/3withGaussians/'
 
 #%%
 def gaussian(position, height, sigma):
@@ -15,7 +15,7 @@ def gaussian(position, height, sigma):
 
 
 #%%
-for seed in range(6,10):
+for seed in range(4, 10):
     np.random.seed(seed)
     bins = 128 #dx = 1/bins; actual number of columns saved = bins-1, because 1st and last are 0
     npots = 200 #ends up being 3*this*(validnth-1)/validnth
@@ -50,9 +50,9 @@ for seed in range(6,10):
             print (str((100.*i)/npots) + '% complete')
         for j in range(3):
             
-            pos = np.random.randint(16, 110)
-            h = np.random.randint(100, 1000)
-            s = np.random.randint(1, 32)
+            pos = np.random.randint(32, 95)
+            h = np.random.uniform(256, 512)
+            s = np.random.uniform(2, 8)
             
             allInfo.append(gaussian(pos, h, s))
             gaussInfo.append(allInfo[k][1:4])
@@ -76,15 +76,15 @@ for seed in range(6,10):
     with open(path+'test_pots/test_pots'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(potentials)
-    with open(path+'valid_pots/valid_pots'+str(seed)+'.csv', 'w') as f:
-        fileout = csv.writer(f)
-        fileout.writerows(validpots)
+    # with open(path+'valid_pots/valid_pots'+str(seed)+'.csv', 'w') as f:
+    #     fileout = csv.writer(f)
+    #     fileout.writerows(validpots)
     with open(path+'test_out/test_out'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)
         fileout.writerows(wavefuncs)
-    with open(path+'valid_out/valid_out'+str(seed)+'.csv', 'w') as f:
-        fileout = csv.writer(f)
-        fileout.writerows(validfuncs)
+    # with open(path+'valid_out/valid_out'+str(seed)+'.csv', 'w') as f:
+    #     fileout = csv.writer(f)
+    #     fileout.writerows(validfuncs)
 
     with open(path+'gaussInfo/'+'test'+str(seed)+'.csv', 'w') as f:
         fileout = csv.writer(f)

@@ -60,6 +60,7 @@ validfuncs = []
 
 allInfo = []
 boxInfo = []
+gaussInfo = []
 k = 0
     
 sess = tf.Session()
@@ -69,10 +70,23 @@ for i in range(npots):
         print (str((100.*i)/npots) + '% complete')
     for j in range(1):
         
-        allInfo.append(generatepot(127))
-        boxInfo.append(allInfo[k][1:4])
+        # pos = np.random.randint(24, 102)
+        # h = np.random.uniform(256, 1024)
+        # s = np.random.uniform(2, 8)
+        
+        pos = 32
+        h = 256
+        s = 8
+        
+        allInfo.append(gaussian(pos, h, s))
+        gaussInfo.append(allInfo[k][1:4])
         vofx = (allInfo[k])[0]
         vofx = [np.float64(n) for n in vofx]
+        
+        # allInfo.append(generatepot(127))
+        # boxInfo.append(allInfo[k][1:4])
+        # vofx = (allInfo[k])[0]
+        # vofx = [np.float64(n) for n in vofx]
         
         k += 1
         
